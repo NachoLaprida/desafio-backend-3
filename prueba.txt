@@ -1,0 +1,23 @@
+[
+  {
+    "name": "Remera 1",
+    "price": 100,
+    "category": "Ropa",
+    "description": "Remera blanca",
+    "id": 1
+  },
+  {
+    "name": "Remera 2",
+    "price": 100,
+    "category": "Ropa",
+    "description": "Remera blanca",
+    "id": 2
+  },
+  {
+    "name": "Remera 3",
+    "price": 100,
+    "category": "Ropa",
+    "description": "Remera blanca",
+    "id": 3
+  }
+]
