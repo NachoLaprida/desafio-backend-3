@@ -22,14 +22,6 @@ class Contenedor {
 
     async getLenght(){
         const productsJson = await this.leerArchivo()
-        /* try{
-            let data = await fs.promises.readFile(this.ruta, 'utf-8')
-            let dataParse = JSON.parse(data)
-            return dataParse
-        }
-        catch(err){
-            console.log(err)
-        } */
         return productsJson.length
     }
 
