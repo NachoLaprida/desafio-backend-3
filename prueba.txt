@@ -19,5 +19,12 @@
     "category": "Ropa",
     "description": "Remera blanca",
     "id": 3
+  },
+  {
+    "name": "Usuario Teste",
+    "price": 5,
+    "category": "pantalones",
+    "description": "el mejor pantalon",
+    "id": 4
   }
 ]

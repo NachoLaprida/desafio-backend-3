@@ -25,25 +25,39 @@ class Contenedor {
         return productsJson.length
     }
 
-
-
-
     async save(obj){
         try{
             let dataArchivo = await fs.promises.readFile(this.ruta, 'utf-8')
             let dataArchivoParse = JSON.parse(dataArchivo)
             if(dataArchivoParse.length){
-                await fs.promises.writeFile(this.ruta, JSON.stringify([ ...dataArchivoParse, {...obj, id: dataArchivoParse[dataArchivoParse.length - 1].id + 1}], null, 2))                
-            } 
-            
+                //obj = {...obj, id: dataArchivoParse[dataArchivoParse.length - 1].id + 1}; 
+                obj.id = dataArchivoParse[dataArchivoParse.length - 1].id + 1;
+                await fs.promises.writeFile(this.ruta, JSON.stringify([ ...dataArchivoParse, obj], null, 2))                
+            }
             else {
-                await fs.promises.writeFile(this.ruta, JSON.stringify([{...obj, id: 1}], null, 2))
+                //obj = {...obj, id: 1}
+                obj.id = 1
+                await fs.promises.writeFile(this.ruta, JSON.stringify([obj], null, 2))
             }
             console.log(`El archivo tiene el id: ${dataArchivoParse[dataArchivoParse.length -1].id + 1}`)
+            //return obj
         } catch (err) {
             console.log(err)
         }
     }
+
+    /* async updateById(obj){
+        const productosJson = await this.readFile();
+        const productoIndex = productosJson.findIndex(producto => parseInt(producto.id) === parseInt(obj.id));
+        productosJson[productoIndex] = obj;
+        if (productosJson.length > 0) {
+            await fs.promises.writeFile(this.archivo, JSON.stringify([...productosJson], null, 2), 'utf8')
+            return obj.id;
+        }else {
+            return productoIndex;
+        }
+    } */
+
     //traer productos por id
     async getById(id){
         try{
@@ -56,6 +70,7 @@ class Contenedor {
             } else {
                 console.log('No se encontro el producto')
             }
+            return producto
         }
         catch (err){
             console.log(err)

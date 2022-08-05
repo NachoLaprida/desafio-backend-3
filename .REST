@@ -1,0 +1,4 @@
+POST http://localhost:8080/api/productos HTTP/1.1
+content-type : application/json 
+
+{"name": "Usuario Teste", "price": 5, "category": "pantalones", "description": "el mejor pantalon"}
