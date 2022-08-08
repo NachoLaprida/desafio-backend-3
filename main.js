@@ -13,12 +13,16 @@ app.use(express.static('public/index.html'))
 
 
 
+
+
+
 contenedor.save({ 
     name:'Remera 3', 
     price: 100, 
     category: "Ropa", 
     description:'Remera blanca'
 })
+
 //contenedor.getById(3)
 //contenedor.getAll()
 
@@ -50,6 +54,16 @@ routerProductos.get('/:id', async (req, res)=> {
     res.json(produtoId);
 })
 
+routerProductos.get('/', async (req,  res) => {
+    try{
+        const allProducts = await contenedor.getAll() 
+        res.json(allProducts)
+    }
+    catch(err){
+        console.log(err)
+    }
+})
+
 /* routerProductos.get('/:id') */
 
 routerProductos.post('/', async (req, res) => {
@@ -61,6 +75,7 @@ routerProductos.post('/', async (req, res) => {
         producto: newProduct 
     })
 })
+
 routerProductos.put('/:id', async (req, res, ) => {
     const { id } = req.params
     const  {name, price, category, description} = req.body
@@ -78,6 +93,11 @@ routerProductos.delete('/:id', async (req, res) => {
         msg: 'se borro el producto' 
     })  
 })
+
+/* routerProductos.put('/:id', (req, res, ) => {
+    const  {name, price, category, description} = req.body
+    
+}) */
 
 app.use('/api/productos', routerProductos) 
 
@@ -103,6 +123,7 @@ const server = app.listen(PORT, () => {
 
 server.on('error', (err) => {
     console.log(err)
+
 })
 
 
