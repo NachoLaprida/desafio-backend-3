@@ -1,17 +1,10 @@
 [
   {
-    "name": "Remera 1",
-    "price": 100,
-    "category": "Ropa",
-    "description": "Remera blanca",
-    "id": 1
-  },
-  {
-    "name": "Remera 2",
-    "price": 100,
-    "category": "Ropa",
-    "description": "Remera blanca",
-    "id": 2
+    "id": 2,
+    "name": "Usuario Teste",
+    "price": 5,
+    "category": "pantalones",
+    "description": "el peor pantalon"
   },
   {
     "name": "Remera 3",

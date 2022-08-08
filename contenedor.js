@@ -26,24 +26,46 @@ class Contenedor {
     }
 
 
-
-
     async save(obj){
         try{
             let dataArchivo = await fs.promises.readFile(this.ruta, 'utf-8')
             let dataArchivoParse = JSON.parse(dataArchivo)
             if(dataArchivoParse.length){
-                await fs.promises.writeFile(this.ruta, JSON.stringify([ ...dataArchivoParse, {...obj, id: dataArchivoParse[dataArchivoParse.length - 1].id + 1}], null, 2))                
-            } 
-            
+                //obj = {...obj, id: dataArchivoParse[dataArchivoParse.length - 1].id + 1}; 
+                obj.id = dataArchivoParse[dataArchivoParse.length - 1].id + 1;
+                await fs.promises.writeFile(this.ruta, JSON.stringify([ ...dataArchivoParse, obj], null, 2))                
+            }
             else {
-                await fs.promises.writeFile(this.ruta, JSON.stringify([{...obj, id: 1}], null, 2))
+                //obj = {...obj, id: 1}
+                obj.id = 1
+                await fs.promises.writeFile(this.ruta, JSON.stringify([obj], null, 2))
             }
             console.log(`El archivo tiene el id: ${dataArchivoParse[dataArchivoParse.length -1].id + 1}`)
+            //return obj
         } catch (err) {
             console.log(err)
         }
     }
+
+    async updateById(obj) {
+        try{
+            let dataArchivo = await fs.promises.readFile(this.ruta, 'utf-8')
+            let dataArchivoParseado = JSON.parse(dataArchivo)
+            const objIndex = dataArchivoParseado.findIndex(producto => (producto.id) === (obj.id))
+            if(objIndex !== -1) {
+                dataArchivoParseado[objIndex] = obj
+                await fs.promises.writeFile(this.ruta, JSON.stringify( dataArchivoParseado, null, 2))
+                return {msg: 'actualizado el producto'}
+            } else {
+                return {error: 'no existe el producto'}
+            }
+            
+        }
+        catch (err){
+            console.log(err)
+        }
+    }
+
     //traer productos por id
     async getById(id){
         try{
@@ -56,6 +78,7 @@ class Contenedor {
             } else {
                 console.log('No se encontro el producto')
             }
+            return producto
         }
         catch (err){
             console.log(err)
@@ -66,7 +89,7 @@ class Contenedor {
             let dataArchivo = await fs.promises.readFile(this.ruta, 'utf-8')
             let dataArchivoParse = JSON.parse(dataArchivo)
             if(dataArchivoParse.length){
-                console.log(dataArchivoParse)
+                //console.log(dataArchivoParse)
             } 
             else{
                 console.log("No hay productos")
@@ -81,10 +104,12 @@ class Contenedor {
 
     async delete(id){
         try{
+            console.log(id)
             let dataArchivo = await fs.promises.readFile(this.ruta, 'utf-8')
             let dataArchivoParse = JSON.parse(dataArchivo)
-
             let producto = dataArchivoParse.find(p => p.id === id)
+            console.log(dataArchivoParse)
+            console.log(producto)
             if(producto){
                 let dataArchivoParseFiltrado = dataArchivoParse.filter(p => p.id !== id)
                 await fs.promises.writeFile(this.ruta, JSON.stringify(dataArchivoParseFiltrado, null, 2))
@@ -93,7 +118,6 @@ class Contenedor {
             else {
                 console.log('No se encontro el producto')
             }
-
         }
         catch(err){
             console.log(err)
