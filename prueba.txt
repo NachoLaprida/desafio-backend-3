@@ -1,23 +1,26 @@
 [
   {
-    "name": "Remera 1",
-    "price": 100,
-    "category": "Ropa",
-    "description": "Remera blanca",
+    "name": "Camiseta Brasil",
+    "price": 16000,
+    "thumbnail": "https://imbictoz.com/wp-content/uploads/2022/07/Camiseta-Brasil-Mundial-Qatar-2022-Version-jugador-frontal.jpg",
     "id": 1
   },
   {
-    "name": "Remera 2",
-    "price": 100,
-    "category": "Ropa",
-    "description": "Remera blanca",
+    "name": "Camiseta Argentina",
+    "price": 17000,
+    "thumbnail": "https://todosobrecamisetas.com/wp-content/uploads/camiseta-adidas-argentina-2022-3.jpg",
     "id": 2
   },
   {
-    "name": "Remera 3",
-    "price": 100,
-    "category": "Ropa",
-    "description": "Remera blanca",
+    "name": "Camiseta Francia",
+    "price": 16000,
+    "thumbnail": "https://todosobrecamisetas.com/wp-content/uploads/france-womens-2022-euro-nike-kits-3.jpg",
     "id": 3
+  },
+  {
+    "name": "Camiseta Inglaterra",
+    "price": 16000,
+    "thumbnail": "https://todosobrecamisetas.com/wp-content/uploads/england-womens-euro-2022-nike-kits-3.jpg",
+    "id": 4
   }
 ]

@@ -1,0 +1,15 @@
+
+DELETE http://localhost:8080/api/productos/3 HTTP/1.1
+content-type : application/json 
+
+
+
+//PUT http://localhost:8080/api/productos/2 HTTP/1.1
+//content-type : application/json 
+
+//{"name": "Usuario Teste", "price": 5, "category": "pantalones", "description": "el peor pantalon"}
+
+//PUT http://localhost:8080/api/productos/2 HTTP/1.1
+//content-type : application/json 
+
+//{"name": "Usuario Teste", "price": 5, "category": "pantalones", "description": "el peor pantalon"}
