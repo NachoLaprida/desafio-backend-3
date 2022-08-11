@@ -12,7 +12,6 @@ app.use(express.static('public/index.html'))
 
 
 
-
 /* contenedor.save({ 
     name:'Remera 3', 
     price: 100, 
@@ -162,5 +161,3 @@ const server = app.listen(PORT, () => {
 server.on('error', (err) => {
     console.log(err)
 })
-
-

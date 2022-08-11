@@ -22,5 +22,11 @@
     "price": 16000,
     "thumbnail": "https://todosobrecamisetas.com/wp-content/uploads/england-womens-euro-2022-nike-kits-3.jpg",
     "id": 4
+  },
+  {
+    "name": "camiseta",
+    "thumbnail": "sad",
+    "price": "12312",
+    "id": 5
   }
 ]

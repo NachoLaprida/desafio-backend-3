@@ -25,7 +25,6 @@ class Contenedor {
         return productsJson.length
     }
 
-
     async save(obj){
         try{
             let dataArchivo = await fs.promises.readFile(this.ruta, 'utf-8')
