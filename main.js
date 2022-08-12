@@ -83,7 +83,7 @@ routerProductos.post('/', async (req, res) => {
     res.render('pages/index.ejs', {
         listaProductos: producto   /* puede ir tambien solo productos porque js lo admite */
     })
-})
+})  
 
 app.get('/', (req, res) => {
     res.json('Buenos dias')
