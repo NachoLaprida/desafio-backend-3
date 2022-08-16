@@ -25,6 +25,7 @@ class Contenedor {
         return productsJson.length
     }
 
+
     async save(obj){
         try{
             let dataArchivo = await fs.promises.readFile(this.ruta, 'utf-8')
@@ -72,6 +73,23 @@ class Contenedor {
             let dataArchivoParse = JSON.parse(dataArchivo)
 
             let producto = dataArchivoParse.find(p => p.id === id)
+            if(producto) {
+                console.log(producto)
+            } else {
+                console.log('No se encontro el producto')
+            }
+            return producto
+        }
+        catch (err){
+            console.log(err)
+        }
+    }
+    async getLastId(id){
+        try{
+            let dataArchivo = await fs.promises.readFile(this.ruta, 'utf-8')
+            let dataArchivoParse = JSON.parse(dataArchivo)
+
+            let producto = dataArchivoParse[ dataArchivoParse.length - 1 ]
             if(producto) {
                 console.log(producto)
             } else {

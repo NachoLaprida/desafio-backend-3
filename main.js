@@ -12,11 +12,11 @@ app.use(express.static('public/index.html'))
 
 
 
+
 /* contenedor.save({ 
     name:'Remera 3', 
     price: 100, 
-    thumbnail: "Ropa", 
-    description:'Remera blanca'
+    thumbnail: "Ropa"
 }) */
 //contenedor.getById(3)
 //contenedor.getAll()
@@ -25,50 +25,67 @@ app.use(express.static('public/index.html'))
 
 //contenedor.deleteAll()
 
-//configuracion del ejs
-app.set('view engine', 'ejs')
+//////////////////////////////    HANDLEBARS  ////////////////////////
+/* const handlebars = require('express-handlebars')
+
+app.engine(
+    'hbs',
+    handlebars.engine({
+        extname: '.hbs',
+        defaultLayout: 'index.hbs',
+        layoutsDir: __dirname + '/views/layouts',
+        //partialsDir: __dirname + '/views/partials'
+        
+    })
+)
+
+app.set('view engine', 'hbs')
 app.set('views', './views')
 
+const fakeApi = () => [
+    {name: 'Nacho', lane: 'midlaner'},
+    {name: 'Nacho1', lane: 'toplaner'},
+    {name: 'Nacho2', lane: 'midlaner'},
+    {name: 'Nacho3', lane: 'toplaner'},
+    {name: 'Nacho4', lane: 'midlaner'}
+]
 
-/* let productos = []
 routerProductos.get('/', (req, res) => {
-    
-    res.render('pages/index.ejs', {
-        mensaje: 'Hola ejs',
-        productos: productos   
+    res.render('index', {listExists: true, list: fakeApi()})
+}) */
+
+
+/////////////////////////////    PUG         ////////////////////////
+//config del pug
+app.set('view engine', 'pug')
+app.set('views', './views')
+
+app.get('/', (req, res) => {
+    res.render('index.pug', {mensaje: 'Hola Pug'})
+})
+
+routerProductos.get('/', async (req, res) => {
+    const producto = await contenedor.getAll()
+    const hayP = producto.length > 0
+    res.render('pages/index.pug', { 
+        listaProductos: producto, 
+                        hayP
+    })
+})
+routerProductos.post('/nuevoProducto', async (req, res) => {
+    await contenedor.save(req.body)
+    const ultimoProducto = await contenedor.getLastId()
+    res.render('pages/nuevoProducto.pug', {
+        nuevoProducto: ultimoProducto
     })
 })
 
-routerProductos.post('/', async (req, res) => {
-    try{
-        const obj = req.body
-        console.log(obj)
-        await productos.push(obj)
-        res.render('pages/index', {
-            mensaje: 'Hola ejs',
-            productos: productos   
-        })
-    }
-    catch(err){
-        console.log(err)
-    }
-}) */
 
-/* routerProductos.get('/', (req, res) => {  
-    res.render('pages/creador.ejs', {
-        titulo: "Subir productos Adidas",
-        nav:"creador"})
-    })
+/////////////////////////////    EJS        ////////////////////////
+//configuracion del ejs
+/* app.set('view engine', 'ejs')
+app.set('views', './views')
 
-app.post('/creador', async (req, res) => {
-    const producto = await contenedor.save(req.body);
-    const creado =  producto != -1
-    console.log(producto)
-    res.render('pages/creadorConfirmar.ejs', {     
-        hayProducto: creado,
-        titulo: 'Creacion de producto'
-    })
-}) */
 
 routerProductos.get('/', async (req, res) => {
     const producto = await contenedor.getAll();
@@ -76,14 +93,16 @@ routerProductos.get('/', async (req, res) => {
         listaProductos: producto
     })
 })
-routerProductos.post('/', async (req, res) => {
+routerProductos.post('/nuevoProducto', async (req, res) => {
     await contenedor.save(req.body)
-    const producto = await contenedor.getAll()
-    
-    res.render('pages/index.ejs', {
-        listaProductos: producto   /* puede ir tambien solo productos porque js lo admite */
+    const ultimoProducto = await contenedor.getLastId()
+    res.render('pages/nuevoProducto.ejs', {
+        nuevoProducto: ultimoProducto   
     })
-})  
+}) */
+
+
+//////////////////////////////////////////////////////////////////
 
 app.get('/', (req, res) => {
     res.json('Buenos dias')
@@ -161,3 +180,5 @@ const server = app.listen(PORT, () => {
 server.on('error', (err) => {
     console.log(err)
 })
+
+

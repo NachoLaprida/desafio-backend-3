@@ -10,27 +10,23 @@
     <title>Desafio con Ejs</title>
 </head>
     <body>
-        <h1 class="text-center">Camisetas del Mundial 2022</h1>
+        <h1 class="text-center">Producto Creado</h1>
         <div class="container d-flex flex-row">
-            <% if(listaProductos.length > 0) {%>
-                    <% listaProductos.forEach( prod => { %>
+            <% if(nuevoProducto !== null) { %>
                         <div class="card tarjeta m-3 flex-wrap" style="width: 18rem;">
-                            <img src=<%= prod.thumbnail %> class="card-img-top" alt="...">
+                            <img src=<%= nuevoProducto.thumbnail %> class="card-img-top" alt="...">
                             <div class="card-body">
-                                <h5 class="card-title"><%= prod.name %></h5>
-                                <h5 class="card-title">$<%= prod.price %></h5>
+                                <h5 class="card-title"><%= nuevoProducto.name %></h5>
+                                <h5 class="card-title">$<%= nuevoProducto.price %></h5>
                             </div>
                         </div>
-                    <% }) %>
             <% }else{ %>
                 <h2>No hay productos</h2>
             <% } %>
         </div>
-        <div class="container justify-content-center m-3">
-            <%- include('../partials/form.ejs')  %>
-        </div>
+        
         <footer>
-            <%- include('../partials/footer.ejs', {mensajeFooter: 'Soy mensaje para footer'})%>
+            <%- include('../partials/footer.ejs', {mensajeFooter: 'Soy mensaje para footer'}) %>
         </footer>
         
     </body>
