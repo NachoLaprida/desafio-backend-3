@@ -11,10 +11,10 @@
 </head>
     <body>
         <h1 class="text-center">Camisetas del Mundial 2022</h1>
-        <div class="container d-flex flex-row">
+        <div class="container d-flex flex-row flex-wrap">
             <% if(listaProductos.length > 0) {%>
                     <% listaProductos.forEach( prod => { %>
-                        <div class="card tarjeta m-3 flex-wrap" style="width: 18rem;">
+                        <div class="card tarjeta m-3" style="width: 18rem;">
                             <img src=<%= prod.thumbnail %> class="card-img-top" alt="...">
                             <div class="card-body">
                                 <h5 class="card-title"><%= prod.name %></h5>

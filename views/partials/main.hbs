@@ -1,0 +1,19 @@
+<h1>Camisetas del Mundial 2022</h1>
+    {{#if listExist}}
+        <div class="container d-flex flex-row flex-wrap">
+            {{#each list}}
+                <div class="card tarjeta m-3" style="width: 18rem; margin: 1rem;">
+                    <img src="{{thumbnail}}" class="card-img-top" alt="{{thumbnail}}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{name}}</h5>
+                        <p class="card-text">$ {{price}}</p>
+                    </div>
+                </div>
+            {{/each}}
+        </div>
+        {{else}}
+            <div class="d-flex p-2 bd-highlight flex-wrap">
+                <h1>No se encontraron elementos</h1>
+            </div>    
+    {{/if}}
+{{>form}}

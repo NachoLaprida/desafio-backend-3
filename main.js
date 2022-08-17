@@ -26,15 +26,15 @@ app.use(express.static('public/index.html'))
 //contenedor.deleteAll()
 
 //////////////////////////////    HANDLEBARS  ////////////////////////
-/* const handlebars = require('express-handlebars')
+const handlebars = require('express-handlebars')
 
 app.engine(
     'hbs',
     handlebars.engine({
         extname: '.hbs',
         defaultLayout: 'index.hbs',
-        layoutsDir: __dirname + '/views/layouts',
-        //partialsDir: __dirname + '/views/partials'
+        layoutsDir: __dirname + '/views/pages',
+        partialsDir: __dirname + '/views/partials'
         
     })
 )
@@ -42,22 +42,28 @@ app.engine(
 app.set('view engine', 'hbs')
 app.set('views', './views')
 
-const fakeApi = () => [
-    {name: 'Nacho', lane: 'midlaner'},
-    {name: 'Nacho1', lane: 'toplaner'},
-    {name: 'Nacho2', lane: 'midlaner'},
-    {name: 'Nacho3', lane: 'toplaner'},
-    {name: 'Nacho4', lane: 'midlaner'}
-]
 
-routerProductos.get('/', (req, res) => {
-    res.render('index', {listExists: true, list: fakeApi()})
-}) */
+routerProductos.get('/', async (req, res) => {
+    const producto = await contenedor.getAll();
+    const listExist = producto.length > 0
+    res.render('partials/main', {
+        producto: true, 
+        list: producto,
+        listExist
+    })
+})
+routerProductos.post('/nuevoProducto', async (req, res) => {
+    await contenedor.save(req.body)
+    const ultimoProducto = await contenedor.getLastId()
+    res.render('pages/nuevoProducto.pug', {
+        nuevoProducto: ultimoProducto
+    })
+})
 
 
 /////////////////////////////    PUG         ////////////////////////
 //config del pug
-app.set('view engine', 'pug')
+/* app.set('view engine', 'pug')
 app.set('views', './views')
 
 app.get('/', (req, res) => {
@@ -78,7 +84,7 @@ routerProductos.post('/nuevoProducto', async (req, res) => {
     res.render('pages/nuevoProducto.pug', {
         nuevoProducto: ultimoProducto
     })
-})
+}) */
 
 
 /////////////////////////////    EJS        ////////////////////////
