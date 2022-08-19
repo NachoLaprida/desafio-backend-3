@@ -3,12 +3,42 @@ const Contenedor = require("./contenedor");
 const {Router} = express
 const routerProductos = Router()
 const routerProductosRandom = Router()
+const {Server: HttpServer} = require('http')
+const {Server: IOServer} = require('socket.io')
+const PORT = process.env.PORT || 8080
 
 const contenedor = new Contenedor('./prueba.txt')
 const app = express()
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-app.use(express.static('public/index.html'))
+app.use(express.static('public'))
+
+const httpServer = new HttpServer(app)
+const io = new IOServer(httpServer)
+
+let messages = [
+    { txt: 'Hola cliente'}
+]
+io.on('connection', (socket) => {
+    const mensaje = {
+        m: 'ok',
+        messages
+    }
+    socket.emit('mensaje-servidor', mensaje)
+    
+    console.log('User connected', socket.id)
+    socket.on('mensaje-nuevo', data => {
+        messages.push(data)
+        const mensaje = {
+            m: 'texto agregado',
+            messages
+        }
+
+        //const id = new Date().get.Time()
+        io.sockets.emit('mensaje-servidor', mensaje)
+    })
+    
+})
 
 
 
@@ -26,7 +56,7 @@ app.use(express.static('public/index.html'))
 //contenedor.deleteAll()
 
 //////////////////////////////    HANDLEBARS  ////////////////////////
-const handlebars = require('express-handlebars')
+/* const handlebars = require('express-handlebars')
 
 app.engine(
     'hbs',
@@ -58,7 +88,7 @@ routerProductos.post('/nuevoProducto', async (req, res) => {
     res.render('pages/nuevoProducto.pug', {
         nuevoProducto: ultimoProducto
     })
-})
+}) */
 
 
 /////////////////////////////    PUG         ////////////////////////
@@ -89,11 +119,11 @@ routerProductos.post('/nuevoProducto', async (req, res) => {
 
 /////////////////////////////    EJS        ////////////////////////
 //configuracion del ejs
-/* app.set('view engine', 'ejs')
+app.set('view engine', 'ejs')
 app.set('views', './views')
 
 
-routerProductos.get('/', async (req, res) => {
+routerProductos.get('', async (req, res) => {
     const producto = await contenedor.getAll();
     res.render('pages/index.ejs', { 
         listaProductos: producto
@@ -105,14 +135,14 @@ routerProductos.post('/nuevoProducto', async (req, res) => {
     res.render('pages/nuevoProducto.ejs', {
         nuevoProducto: ultimoProducto   
     })
-}) */
+})
 
 
 //////////////////////////////////////////////////////////////////
 
-app.get('/', (req, res) => {
+/* app.get('/', (req, res) => {
     res.json('Buenos dias')
-})
+}) */
 
 ///////////////// productos ////////////
 
@@ -166,20 +196,20 @@ app.use('/api/productos', routerProductos)
 
 //////////// productosRandom /////////
 
-routerProductosRandom.get('/', async (req, res) => {
+/* routerProductosRandom.get('/', async (req, res) => {
     const cantidad = await contenedor.getLenght();
     const random =  Math.floor(Math.random() * cantidad ) + 1 ;
     const productRandom = await contenedor.getById(random);
     res.json(productRandom);
 })
 
-app.use('/api/productosRandom', routerProductosRandom) 
+app.use('/api/productosRandom', routerProductosRandom)  */
 
 
 
-const PORT = process.env.PORT || 8080
 
-const server = app.listen(PORT, () => {
+
+const server = httpServer.listen(PORT, () => {
     console.log(`Escuchando el puerto ${server.address().port}`)
 })
 
@@ -188,3 +218,7 @@ server.on('error', (err) => {
 })
 
 
+/* httpServer.listen(PORT, (err) => {
+    if(err) throw Error(`Error on server listen: ${err}`)
+    console.log(`Server is running on port: ${PORT}`)
+}) */
