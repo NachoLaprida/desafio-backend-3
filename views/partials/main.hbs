@@ -1,3 +1,4 @@
+<script src="/socket.io/socket.io.js"></script>
 <h1>Camisetas del Mundial 2022</h1>
     {{#if listExist}}
         <div class="container d-flex flex-row flex-wrap">
@@ -16,4 +17,26 @@
                 <h1>No se encontraron elementos</h1>
             </div>    
     {{/if}}
+
 {{>form}}
+
+<div class="row">
+    <div class="col">
+        <ul id="chat">
+            
+        </ul>
+    </div>
+    <div class="col">
+        <form action="" onsubmit="return addText(this)" class="mt-5">
+            <input class="form-control" type="text" id="mensaje" name="mensaje" placeholder="Mensaje">
+            <br>
+            <input type="submit" value="Enviar">
+        </form>
+    </div>
+    <div class="col">
+        <div id="#ppp" class="container d-flex flex-row flex-wrap">
+
+        </div>
+</div>
+
+<script src="/js/client.js"></script>

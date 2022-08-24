@@ -1,13 +1,16 @@
 const express = require('express')
 const Contenedor = require("./contenedor");
+const Comentario = require("./contenedor");
 const {Router} = express
 const routerProductos = Router()
 const routerProductosRandom = Router()
 const {Server: HttpServer} = require('http')
-const {Server: IOServer} = require('socket.io')
+const {Server: IOServer} = require('socket.io');
+const { ok } = require('assert');
 const PORT = process.env.PORT || 8080
 
 const contenedor = new Contenedor('./prueba.txt')
+const comentario = new Comentario('./comentarios.txt')
 const app = express()
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
@@ -16,31 +19,56 @@ app.use(express.static('public'))
 const httpServer = new HttpServer(app)
 const io = new IOServer(httpServer)
 
-let messages = [
-    { txt: 'Hola cliente'}
-]
-io.on('connection', (socket) => {
+
+
+////////////////// WEB SOCKET /////////////////////
+let messages = []
+
+io.on('connection', async (socket) => {
+    /*const comment = await comentario.getAll()
+    socket.emit('mensaje-servidor', {
+        m: "ok",
+        comentarios: comment
+    })
+    console.log(comment)
+    socket.on('mensaje-nuevo', async (req, res) => {
+        await comment.save(req.body) 
+        const comment = {
+            m:"comentario agregado",
+            comentario: comment
+        }
+    })
+    io.sockets.emit('mensaje-servidor', comment) */
+
     const mensaje = {
         m: 'ok',
         messages
     }
-    socket.emit('mensaje-servidor', mensaje)
     
     console.log('User connected', socket.id)
-    socket.on('mensaje-nuevo', data => {
+    
+    socket.on('mensaje-nuevo', async (data) => {
+        await comentario.save(data)
         messages.push(data)
         const mensaje = {
             m: 'texto agregado',
             messages
         }
-
-        //const id = new Date().get.Time()
         io.sockets.emit('mensaje-servidor', mensaje)
     })
-    
-})
+    //console.log(mensaje)
 
+    socket.on('mensaje-nuevo-producto', async (data) => {
+        await contenedor.save(data)
+        io.sockets.emit('mensaje-servidor-nuevo-producto', data)
+    })
+    socket.on('mensaje-email', (data) => {
+        console.log('el email es',data)
+    })
 
+}) 
+
+//////////////////////////////////////////////
 
 
 /* contenedor.save({ 
@@ -129,6 +157,7 @@ routerProductos.get('', async (req, res) => {
         listaProductos: producto
     })
 })
+
 routerProductos.post('/nuevoProducto', async (req, res) => {
     await contenedor.save(req.body)
     const ultimoProducto = await contenedor.getLastId()

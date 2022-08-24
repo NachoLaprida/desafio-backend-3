@@ -12,7 +12,7 @@
 </head>
     <body>
         <h1 class="text-center">Camisetas del Mundial 2022</h1>
-        <div class="container d-flex flex-row flex-wrap">
+        <!-- <div class="container d-flex flex-row flex-wrap" id="nacho">
             <% if(listaProductos.length > 0) {%>
                     <% listaProductos.forEach( prod => { %>
                         <div class="card tarjeta m-3" style="width: 18rem;">
@@ -26,9 +26,17 @@
             <% }else{ %>
                 <h2>No hay productos</h2>
             <% } %>
-        </div>
+        </div> -->
         <div class="container justify-content-center m-3">
             <%- include('../partials/form.ejs')  %>
+        </div>
+        <div class="container justify-content-center m-3 w-100">
+            <%- include('../partials/email.ejs')  %>
+        </div>
+        
+        <div id="catalogo" class="container d-flex flex-row flex-wrap">
+            
+
         </div>
         <div class="row">
             <div class="col">
@@ -40,15 +48,15 @@
                 <form action="" onsubmit="return addText(this)" class="mt-5">
                     <input class="form-control" type="text" id="mensaje" name="mensaje" placeholder="Mensaje">
                     <br>
-                    <input type="submit" value="Enviar">
+                    <input class="btn btn-primary" type="submit" value="Enviar">
                 </form>
             </div>
-
         </div>
+        
 
 
         <footer>
-            <%- include('../partials/footer.ejs', {mensajeFooter: 'Soy mensaje para footer'})%>
+            <%- include('../partials/footer.ejs', {mensajeFooter: 'Proyecto CoderHouse curso backend || Ignacio Laprida'})%>
         </footer>
         
         <script src="/js/client.js"></script>
