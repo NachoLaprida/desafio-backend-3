@@ -175,7 +175,7 @@ routerProductos.post('/nuevoProducto', async (req, res) => {
 
 ///////////////// productos ////////////
 
-/* routerProductos.get('/', async (req,  res) => {
+routerProductos.get('/', async (req,  res) => {
     try{
         const allProducts = await contenedor.getAll() 
         res.json(allProducts)
@@ -183,9 +183,9 @@ routerProductos.post('/nuevoProducto', async (req, res) => {
     catch(err){
         console.log(err)
     }
-}) */
+})
 
-/* routerProductos.get('/:id', async (req, res)=> {
+routerProductos.get('/:id', async (req, res)=> {
     const idReq = req.params.id
     //console.log('idReq', idReq)
     const produtoId = await contenedor.getById(+idReq); //consultar que hace el +
@@ -218,7 +218,7 @@ routerProductos.delete('/:id', async (req, res) => {
     res.json({
         msg: 'se borro el producto' 
     })  
-}) */
+})
 
 app.use('/api/productos', routerProductos) 
 

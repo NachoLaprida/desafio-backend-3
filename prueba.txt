@@ -1,26 +1,26 @@
 [
   {
-    "name": "Camiseta Brasil",
-    "price": 16000,
-    "thumbnail": "https://imbictoz.com/wp-content/uploads/2022/07/Camiseta-Brasil-Mundial-Qatar-2022-Version-jugador-frontal.jpg",
+    "name": "Camiseta Argentina",
+    "price": "17000",
+    "thumbnail": "https://todosobrecamisetas.com/wp-content/uploads/camiseta-adidas-argentina-2022-3.jpg",
     "id": 1
   },
   {
-    "name": "Camiseta Argentina",
+    "id": 2,
+    "name": "Camiseta España",
     "price": 17000,
-    "thumbnail": "https://todosobrecamisetas.com/wp-content/uploads/camiseta-adidas-argentina-2022-3.jpg",
-    "id": 2
-  },
-  {
-    "name": "Camiseta Francia",
-    "price": 16000,
-    "thumbnail": "https://todosobrecamisetas.com/wp-content/uploads/france-womens-2022-euro-nike-kits-3.jpg",
-    "id": 3
+    "thumbnail": "https://www.intersport.es/dw/image/v2/BBWT_PRD/on/demandware.static/-/Sites-intersport-master-catalog/default/dw94c6c6be/images/iic-adidas-BR2713-713-hero-x-0001.jpg?sw=580&sh=580&sm=fit"
   },
   {
     "name": "Camiseta Inglaterra",
-    "price": 16000,
+    "price": "17000",
     "thumbnail": "https://todosobrecamisetas.com/wp-content/uploads/england-womens-euro-2022-nike-kits-3.jpg",
     "id": 4
+  },
+  {
+    "name": "Camiseta Francia",
+    "price": 5,
+    "thumbnail": "http://cdn.shopify.com/s/files/1/0567/6639/8509/products/fwrwg_1200x1200.jpg?v=1658523444",
+    "id": 5
   }
 ]
