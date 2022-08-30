@@ -1,8 +1,7 @@
 
-//DELETE http://localhost:8080/api/productos/3 HTTP/1.1
-//content-type : application/json 
+//producto
 
-//DELETE http://localhost:8080/api/productos/4 HTTP/1.1
+//DELETE http://localhost:8080/api/productos/6 HTTP/1.1
 //content-type: application/json
 
 //PUT http://localhost:8080/api/productos/4 HTTP/1.1
@@ -10,10 +9,10 @@
 
 //{"name": "Usuario Teste", "price": 10, "category": "pantalones", "description": "el peor pantalon"}
 
-PUT http://localhost:8080/api/productos/2 HTTP/1.1
-content-type : application/json 
+//PUT http://localhost:8080/api/productos/2 HTTP/1.1
+//content-type : application/json 
 
-{"name": "Camiseta España", "price": 17000, "thumbnail": "https://www.intersport.es/dw/image/v2/BBWT_PRD/on/demandware.static/-/Sites-intersport-master-catalog/default/dw94c6c6be/images/iic-adidas-BR2713-713-hero-x-0001.jpg?sw=580&sh=580&sm=fit"}
+//{"name": "Camiseta España", "price": 17000, "thumbnail": "https://www.intersport.es/dw/image/v2/BBWT_PRD/on/demandware.static/-/Sites-intersport-master-catalog/default/dw94c6c6be/images/iic-adidas-BR2713-713-hero-x-0001.jpg?sw=580&sh=580&sm=fit"}
 
 //{"name": "Usuario Teste", "price": 10, "category": "pantalones", "description": "probando"}
 
@@ -21,4 +20,17 @@ content-type : application/json
 //content-type : application/json 
 
 //{"name": "Camiseta Francia", "price": 5, "thumbnail": "http://cdn.shopify.com/s/files/1/0567/6639/8509/products/fwrwg_1200x1200.jpg?v=1658523444"}
+
+//GET http://localhost:8080/api/productos/2 HTTP/1.1
+//content-type : application/json 
+
+//carrito
+//DELETE http://localhost:8080/api/carrito/4 HTTP/1.1
+//content-type : application/json 
+
+//POST  http://localhost:8080/api/carrito/ HTTP/1.1
+//content-type : application/json
+
+GET http://localhost:8080/api/productos/2 HTTP/1.1
+content-type : application/json 
 
