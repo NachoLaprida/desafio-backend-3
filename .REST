@@ -16,21 +16,21 @@
 
 //{"name": "Usuario Teste", "price": 10, "category": "pantalones", "description": "probando"}
 
-//POST http://localhost:8080/api/productos HTTP/1.1
-//content-type : application/json 
+POST http://localhost:8080/api/productos HTTP/1.1
+content-type : application/json 
 
-//{"name": "Camiseta Francia", "price": 5, "thumbnail": "http://cdn.shopify.com/s/files/1/0567/6639/8509/products/fwrwg_1200x1200.jpg?v=1658523444"}
+{"name": "Camiseta europa", "price": 105, "thumbnail": "http://cdn.shopify.com/s/files/1/0567/6639/8509/products/fwrwg_1200x1200.jpg?v=1658523444"}
 
-//GET http://localhost:8080/api/productos/2 HTTP/1.1
+//GET http://localhost:8080/api/productos HTTP/1.1
 //content-type : application/json 
 
 //carrito
-//DELETE http://localhost:8080/api/carrito/4 HTTP/1.1
+//DELETE http://localhost:8080/api/carrito/1 HTTP/1.1
 //content-type : application/json 
 
 //POST  http://localhost:8080/api/carrito/ HTTP/1.1
 //content-type : application/json
 
-GET http://localhost:8080/api/productos/2 HTTP/1.1
-content-type : application/json 
+//GET http://localhost:8080/api/carrito/1/productos HTTP/1.1
+//content-type : application/json 
 
