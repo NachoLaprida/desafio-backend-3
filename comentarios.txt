@@ -38,17 +38,5 @@
   {
     "mensaje": "nacholi",
     "id": 10
-  },
-  {
-    "mensaje": "nacholiasd",
-    "id": 11
-  },
-  {
-    "mensaje": "asdasd",
-    "id": 12
-  },
-  {
-    "mensaje": "asdasdqwe",
-    "id": 13
   }
 ]

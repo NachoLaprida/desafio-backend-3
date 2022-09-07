@@ -1,5 +1,3 @@
-
-
 class Container {
 	constructor(knex, tabla) {
 		this.knex = knex

@@ -11,11 +11,13 @@ const {Server: IOServer} = require('socket.io');
 const PORT = process.env.PORT || 8080
 
 /////desafio base de datos
-const { options } = require('./mariaDB/conexionDB')
-//const { options } = require('./sqllite3/conexionDB')
-const knexMariaDB = require('knex')(options)
+const { optionsMariaDB } = require('./mariaDB/conexionDB')
+const { optionsSQLlite } = require('./sqllite3/conexionDB')
+const knexMariaDB = require('knex')(optionsMariaDB)
+const knexSqlLite = require('knex')(optionsSQLlite)
 const {Container} = require('./containerDB')
 const container = new Container(knexMariaDB, 'desafioSQL')
+const containerLite = new Container(knexSqlLite, 'comentariosSQL')
 
 const contenedor = new Contenedor('./ecommerce.txt')
 const comentario = new Comentario('./comentarios.txt')
@@ -115,6 +117,36 @@ routerProductos.delete('/', async (req, res) => {
     })  
 })
 
+const comments = [
+	{
+		mensaje: "Hola Mundo"
+	},
+	{
+		mensaje: "probando"
+	}
+]
+
+
+const batchSqlite3 = async () => {
+	try {
+        await knexSqlLite.schema.hasTable('comentariosSQL').then(function(exists) {
+            if (!exists) {
+                console.log('tabla creada')
+            return knexSqlLite.schema.createTable('comentariosSQL', table => {
+                table.increments("id");
+                table.string("mensaje");
+            });
+            }
+        })
+		await knexSqlLite('comentariosSQL').insert(comments)
+        console.log(`comentario agregado`)
+	} catch (error) {
+		console.log(`error tabla ${error}`)
+	}
+};
+
+batchSqlite3()
+
 
 ////////////////// WEB SOCKET /////////////////////
 let messages = []
@@ -129,7 +161,7 @@ io.on('connection', async (socket) => {
     console.log('User connected', socket.id)
     
     socket.on('mensaje-nuevo', async (data) => {
-        await comentario.save(data)
+        await containerLite.save(data)
         messages.push(data)
         const mensaje = {
             m: 'texto agregado',
