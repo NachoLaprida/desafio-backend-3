@@ -1,13 +1,13 @@
 const express = require('express')
-const {Contenedor} = require("./contenedor");
-const {Comentario} = require("./comentario");
-const {Carrito} = require("./carrito");
+const {Contenedor} = require("./contenedor")
+const {Comentario} = require("./comentario")
+const {Carrito} = require("./carrito")
 const {Router} = express
 const routerProductos = Router()
 const routerCarrito = Router()
 const routerProductosRandom = Router()
 const {Server: HttpServer} = require('http')
-const {Server: IOServer} = require('socket.io');
+const {Server: IOServer} = require('socket.io')
 const PORT = process.env.PORT || 8080
 
 /////desafio base de datos

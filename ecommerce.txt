@@ -1,26 +1,62 @@
 [
   {
     "name": "Camiseta Argentina",
-    "price": "17000",
+    "price": "120",
     "thumbnail": "https://todosobrecamisetas.com/wp-content/uploads/camiseta-adidas-argentina-2022-3.jpg",
     "id": 1
   },
   {
     "id": 2,
     "name": "Camiseta España",
-    "price": 17000,
+    "price": 580,
+    "thumbnail": "https://www.intersport.es/dw/image/v2/BBWT_PRD/on/demandware.static/-/Sites-intersport-master-catalog/default/dw94c6c6be/images/iic-adidas-BR2713-713-hero-x-0001.jpg?sw=580&sh=580&sm=fit"
+  },
+  {
+    "id": 3,
+    "name": "Camiseta España",
+    "price": 900,
     "thumbnail": "https://www.intersport.es/dw/image/v2/BBWT_PRD/on/demandware.static/-/Sites-intersport-master-catalog/default/dw94c6c6be/images/iic-adidas-BR2713-713-hero-x-0001.jpg?sw=580&sh=580&sm=fit"
   },
   {
     "name": "Camiseta Inglaterra",
-    "price": "17000",
+    "price": "1280",
     "thumbnail": "https://todosobrecamisetas.com/wp-content/uploads/england-womens-euro-2022-nike-kits-3.jpg",
     "id": 4
   },
   {
     "name": "Camiseta Francia",
-    "price": 5,
+    "price": 1700,
     "thumbnail": "http://cdn.shopify.com/s/files/1/0567/6639/8509/products/fwrwg_1200x1200.jpg?v=1658523444",
     "id": 5
+  },
+  {
+    "name": "Camiseta Brasil",
+    "price": 2300,
+    "thumbnail": "http://cdn.shopify.com/s/files/1/0567/6639/8509/products/fwrwg_1200x1200.jpg?v=1658523444",
+    "id": 6
+  },
+  {
+    "name": "Camiseta Belgica",
+    "price": 2860,
+    "thumbnail": "http://cdn.shopify.com/s/files/1/0567/6639/8509/products/fwrwg_1200x1200.jpg?v=1658523444",
+    "id": 7
+  },
+  {
+    "name": "Camiseta Portugal",
+    "price": 3350,
+    "thumbnail": "http://cdn.shopify.com/s/files/1/0567/6639/8509/products/fwrwg_1200x1200.jpg?v=1658523444",
+    "id": 8
+  },
+  {
+    "name": "Camiseta Uruguay",
+    "price": 4320,
+    "thumbnail": "http://cdn.shopify.com/s/files/1/0567/6639/8509/products/fwrwg_1200x1200.jpg?v=1658523444",
+    "id": 9
+  },
+  {
+    "name": "Camiseta Alemania",
+    "price": 4990,
+    "thumbnail": "http://cdn.shopify.com/s/files/1/0567/6639/8509/products/fwrwg_1200x1200.jpg?v=1658523444",
+    "id": 10
   }
 ]
