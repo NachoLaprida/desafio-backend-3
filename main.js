@@ -1,7 +1,5 @@
 const express = require('express')
-const {Contenedor} = require("./contenedor")
 const {Comentario} = require("./comentario")
-const {Carrito} = require("./carrito")
 const {Router} = express
 const routerProductos = Router()
 const routerCarrito = Router()
@@ -10,18 +8,25 @@ const {Server: HttpServer} = require('http')
 const {Server: IOServer} = require('socket.io')
 const PORT = process.env.PORT || 8080
 
-/////desafio base de datos
-const { optionsMariaDB } = require('./mariaDB/conexionDB')
-const { optionsSQLlite } = require('./sqllite3/conexionDB')
-const knexMariaDB = require('knex')(optionsMariaDB)
-const knexSqlLite = require('knex')(optionsSQLlite)
-const {Container} = require('./containerDB')
-const container = new Container(knexMariaDB, 'desafioSQL')
-const containerLite = new Container(knexSqlLite, 'comentariosSQL')
 
-const contenedor = new Contenedor('./ecommerce.txt')
-const comentario = new Comentario('./comentarios.txt')
-const carrito = new Carrito('./carrito.txt')
+//const CarritoDaoArchivo = require("./daos/carritos/carritoDaoArchivo")
+//const {CarritoDaoMongoDB} = require("./daos/carritos/carritoDaoMongoDB")
+const {CarritoDaoFirebase} = require("./daos/carritos/carritoDaoFirebase")
+
+//const ProductoDaoArchivo = require("./daos/productos/ProductoDaoArchivo")
+//const {ProductosDaoMongoDB} = require("./daos/productos/ProductoDaoMongoDB")
+const {ProductosDaoFirebase} = require("./daos/productos/productoDaoFirebase")
+
+/* const producto = new ProductoDaoArchivo('./txt/ecommerce.txt')
+const carrito = new CarritoDaoArchivo('./txt/carrito.txt') */
+
+/* const producto = new ProductosDaoMongoDB()
+const carrito = new CarritoDaoMongoDB() */
+
+const producto = new ProductosDaoFirebase()
+const carrito = new CarritoDaoFirebase()
+
+const comentario = new Comentario('./txt/comentarios.txt')
 const app = express()
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
@@ -29,6 +34,18 @@ app.use(express.static('public'))
 
 const httpServer = new HttpServer(app)
 const io = new IOServer(httpServer)
+
+/////desafio base de datos
+/* const { optionsMariaDB } = require('./config/mariaDB')
+const { optionsSQLlite } = require('./config/conexionSQLITEDB')
+const knexMariaDB = require('knex')(optionsMariaDB)
+const knexSqlLite = require('knex')(optionsSQLlite)
+const {Container} = require('./contenedores/containerSQLDB')
+const container = new Container(knexMariaDB, 'desafioSQL')
+const containerLite = new Container(knexSqlLite, 'comentariosSQL')
+
+
+
 
 
 ///// desafio base de datos
@@ -145,7 +162,7 @@ const batchSqlite3 = async () => {
 	}
 };
 
-batchSqlite3()
+batchSqlite3() */
 
 
 ////////////////// WEB SOCKET /////////////////////
@@ -211,9 +228,9 @@ routerProductos.post('/nuevoProducto', async (req, res) => {
 
 ///////////////// Productos ////////////
 
-/* routerProductos.get('/', async (req,  res) => {
+routerProductos.get('/', async (req,  res) => {
     try{
-        const allProducts = await contenedor.getAll() 
+        const allProducts = await producto.getAll() 
         res.json(allProducts)
     }
     catch(err){
@@ -223,8 +240,10 @@ routerProductos.post('/nuevoProducto', async (req, res) => {
 
 routerProductos.get('/:id', async (req, res)=> {
     const idReq = req.params.id
-    console.log('idReq', )
-    const productoId = await contenedor.getById(+idReq); //consultar que hace el +
+    //con archivo
+    /* const productoId = await producto.getById(+idReq) */
+    //con mongo y firebase
+    const productoId = await producto.getById(idReq)
     res.json(productoId);
 })
 
@@ -233,7 +252,7 @@ routerProductos.post('/', async (req, res) => {
     //console.log('el req', req.body)
     const {name, price, thumbnail} = req.body
     let newProduct = {name, price, thumbnail}
-    await contenedor.save(newProduct) 
+    await producto.save(newProduct) 
     res.json({
         producto: newProduct 
     })
@@ -242,7 +261,9 @@ routerProductos.put('/:id', async (req, res, ) => {
     const { id } = req.params
     const  {name, price, thumbnail} = req.body
     let updateProduct = {name, price, thumbnail}
-    await contenedor.updateById({id: parseInt(id), ...updateProduct})
+    /* await producto.updateById({id: parseInt(id), ...updateProduct}) */
+    //con mongo y firebase
+    await producto.updateById({id:(id), ...updateProduct})
     res.json({
         producto: updateProduct
     })       
@@ -250,11 +271,14 @@ routerProductos.put('/:id', async (req, res, ) => {
 
 routerProductos.delete('/:id', async (req, res) => {
     const { id } = req.params
-    await contenedor.delete(parseInt(id))
+    //para firebase y mongo
+    await producto.deleteById(id)
+    //archivo
+    //await producto.deleteById(parseInt(id))
     res.json({
         msg: 'se borro el producto' 
     })  
-}) */
+})
 
 ////////////// Carrito ////////////////////////////
 
@@ -263,14 +287,23 @@ routerProductos.delete('/:id', async (req, res) => {
 
 
 routerCarrito.post('/', async (req, res) => {
-    let newCarrito = await carrito.createCart()
+    let timestamp = Date.now()
+        let cart = {
+            timestamp,
+            products: [],
+        }          
+    let newCarrito = await carrito.save(cart)
+
     res.json({
         carrito: newCarrito 
     })
 })
 routerCarrito.delete('/:id', async (req, res) => {
     const { id } = req.params
-    await carrito.delete(parseInt(id))
+    //con archivo
+    //await carrito.deleteById(parseInt(id))
+    //con mongo o firebase
+    await carrito.deleteById(id)
     res.json({
         msg: 'se borro el producto del carrito' 
     })  

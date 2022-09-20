@@ -1,7 +1,7 @@
 const fs = require ('fs')
 
 
-class Contenedor {
+class ContenedorArchivo {
     constructor (ruta) {
         this.ruta = ruta
     }
@@ -120,7 +120,7 @@ class Contenedor {
         }
     }
 
-    async delete(id){
+    async deleteById(id){
         try{
             console.log(id)
             let dataArchivo = await fs.promises.readFile(this.ruta, 'utf-8')
@@ -149,5 +149,5 @@ class Contenedor {
 
 }
 
-module.exports.Contenedor = Contenedor
+module.exports.ContenedorArchivo = ContenedorArchivo
 
