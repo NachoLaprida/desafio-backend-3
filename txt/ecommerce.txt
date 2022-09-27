@@ -24,39 +24,21 @@
     "id": 4
   },
   {
-    "name": "Camiseta Francia",
-    "price": 1700,
-    "thumbnail": "http://cdn.shopify.com/s/files/1/0567/6639/8509/products/fwrwg_1200x1200.jpg?v=1658523444",
+    "name": "asd",
+    "price": "123",
+    "thumbnail": "qwe",
     "id": 5
   },
   {
-    "name": "Camiseta Brasil",
-    "price": 2300,
-    "thumbnail": "http://cdn.shopify.com/s/files/1/0567/6639/8509/products/fwrwg_1200x1200.jpg?v=1658523444",
+    "name": "asd",
+    "price": "22",
+    "thumbnail": "qwe",
     "id": 6
   },
   {
-    "name": "Camiseta Belgica",
-    "price": 2860,
-    "thumbnail": "http://cdn.shopify.com/s/files/1/0567/6639/8509/products/fwrwg_1200x1200.jpg?v=1658523444",
+    "name": "asdasd",
+    "price": "21",
+    "thumbnail": "qwe",
     "id": 7
-  },
-  {
-    "name": "Camiseta Portugal",
-    "price": 3350,
-    "thumbnail": "http://cdn.shopify.com/s/files/1/0567/6639/8509/products/fwrwg_1200x1200.jpg?v=1658523444",
-    "id": 8
-  },
-  {
-    "name": "Camiseta Uruguay",
-    "price": 4320,
-    "thumbnail": "http://cdn.shopify.com/s/files/1/0567/6639/8509/products/fwrwg_1200x1200.jpg?v=1658523444",
-    "id": 9
-  },
-  {
-    "name": "Camiseta Alemania",
-    "price": 4990,
-    "thumbnail": "http://cdn.shopify.com/s/files/1/0567/6639/8509/products/fwrwg_1200x1200.jpg?v=1658523444",
-    "id": 10
   }
 ]

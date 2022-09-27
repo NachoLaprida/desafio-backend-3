@@ -7,7 +7,7 @@ const renderChat = (chat) => {
     let mensajes = document.querySelector(`#chat`)
     let html = chat.map(text => {
         return `<div>
-            <p class="fyh">[${fecha.day}/${fecha.month}/${fecha.year} ${hora.hour}:${hora.minutes}:${hora.seconds}] : <i class="texto"> ${text.mensaje}</i></p>
+            <p class="fyh">[${fecha.day}/${fecha.month}/${fecha.year} ${hora.hour}:${hora.minutes}:${hora.seconds}] : <i class="texto"> ${text.mensaje.message}</i></p>
         </div>`
     })
     
@@ -15,7 +15,19 @@ const renderChat = (chat) => {
 }
 
 const addText = (evt) => {
-    const mensaje = document.querySelector('#mensaje').value
+    const mensaje = {
+        author: {
+            id: document.querySelector('#email').value,
+            avatar: document.querySelector('#avatar').value,
+            age: document.querySelector('#age').value,
+            firstName: document.querySelector('#firstName').value,
+            lastName: document.querySelector('#lastName').value,
+            alias: document.querySelector('#alias').value
+        }, 
+        message: document.querySelector('#message').value,
+        dateTime: new Date()   
+    }
+    
     const enviar = {mensaje}
 
     socket.emit('mensaje-nuevo', enviar, (id) => {
@@ -24,10 +36,8 @@ const addText = (evt) => {
     return false
 }
 
-socket.on('mensaje-servidor', (mensaje) => {
-    console.log(mensaje)
-    renderChat(mensaje.messages)
-    
+socket.on('mensaje-servidor', (chat) => {
+    renderChat(chat)
 })
 const time = new Date()
 const hour = time.getHours()
@@ -49,18 +59,7 @@ const fecha = {
     year: year
 } 
 
-const addEmail = (evt) => {
-    const email = document.querySelector('#email').value
-    const enviar = {email}
 
-    socket.emit('mensaje-email', enviar, (id) => {
-    console.log(id)
-    })
-    return false
-}
-socket.on('mensaje-email-agregado', (data) => {
-    console.log('email agregado', data)
-})
 
 ///////////////// catalogo con web socket //////////////////
 

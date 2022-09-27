@@ -1,21 +1,47 @@
 const express = require('express')
 const {Comentario} = require("./comentario")
+const {ContenedorArchivo} = require("./contenedores/contenedorArchivo")
 const {Router} = express
 const routerProductos = Router()
 const routerCarrito = Router()
+const routerProductosTest = Router()
 const routerProductosRandom = Router()
 const {Server: HttpServer} = require('http')
 const {Server: IOServer} = require('socket.io')
 const PORT = process.env.PORT || 8080
+const {faker} = require('@faker-js/faker')
+const {generateProducts} = require('./utils/generadorDeProductos')
+faker.locale = 'es'
+
+const normalizr = require('normalizr')
+const {normalize, denormalize, schema } = normalizr
+
+const authorSchema = new schema.Entity('authors')
+
+const commentSchema = new schema.Entity('comments')
+
+const postSchema = new schema.Entity('posts', {
+    author: authorSchema,
+    comments: [commentSchema]
+})
+
+
+//desafio faker consigna 1
+routerProductosTest.get('/', (req, res) => {
+        const productos = generateProducts(5) 
+        res.render('pages/index.ejs', { 
+            listaProductos: productos,
+        })
+})
 
 
 //const CarritoDaoArchivo = require("./daos/carritos/carritoDaoArchivo")
 //const {CarritoDaoMongoDB} = require("./daos/carritos/carritoDaoMongoDB")
-const {CarritoDaoFirebase} = require("./daos/carritos/carritoDaoFirebase")
+//const {CarritoDaoFirebase} = require("./daos/carritos/carritoDaoFirebase")
 
 //const ProductoDaoArchivo = require("./daos/productos/ProductoDaoArchivo")
 //const {ProductosDaoMongoDB} = require("./daos/productos/ProductoDaoMongoDB")
-const {ProductosDaoFirebase} = require("./daos/productos/productoDaoFirebase")
+//const {ProductosDaoFirebase} = require("./daos/productos/productoDaoFirebase")
 
 /* const producto = new ProductoDaoArchivo('./txt/ecommerce.txt')
 const carrito = new CarritoDaoArchivo('./txt/carrito.txt') */
@@ -23,9 +49,10 @@ const carrito = new CarritoDaoArchivo('./txt/carrito.txt') */
 /* const producto = new ProductosDaoMongoDB()
 const carrito = new CarritoDaoMongoDB() */
 
-const producto = new ProductosDaoFirebase()
-const carrito = new CarritoDaoFirebase()
+/* const producto = new ProductosDaoFirebase()
+const carrito = new CarritoDaoFirebase() */
 
+const contenedor = new ContenedorArchivo('./txt/ecommerce.txt')
 const comentario = new Comentario('./txt/comentarios.txt')
 const app = express()
 app.use(express.json())
@@ -36,7 +63,7 @@ const httpServer = new HttpServer(app)
 const io = new IOServer(httpServer)
 
 /////desafio base de datos
-/* const { optionsMariaDB } = require('./config/mariaDB')
+const { optionsMariaDB } = require('./config/mariaDB')
 const { optionsSQLlite } = require('./config/conexionSQLITEDB')
 const knexMariaDB = require('knex')(optionsMariaDB)
 const knexSqlLite = require('knex')(optionsSQLlite)
@@ -49,7 +76,7 @@ const containerLite = new Container(knexSqlLite, 'comentariosSQL')
 
 
 ///// desafio base de datos
-const item = [
+/* const item = [
     {
         name: "Camiseta Argentina",
         price: "17000",
@@ -70,9 +97,9 @@ const item = [
         price: 5,
         thumbnail: "http://cdn.shopify.com/s/files/1/0567/6639/8509/products/fwrwg_1200x1200.jpg?v=1658523444"
     }
-]
+] */
 
-const batch = async () => {
+/* const batch = async () => {
 	try {
         await knexMariaDB.schema.hasTable('desafioSQL').then(function(exists) {
             if (!exists) {
@@ -91,7 +118,7 @@ const batch = async () => {
 		console.log(`error tabla ${error}`)
 	}
 }
-batch()
+//batch() */
 
 routerProductos.get('', async (req, res) => {
     const producto = await contenedor.getAll()
@@ -134,7 +161,7 @@ routerProductos.delete('/', async (req, res) => {
     })  
 })
 
-const comments = [
+/*const comments = [
 	{
 		mensaje: "Hola Mundo"
 	},
@@ -178,13 +205,11 @@ io.on('connection', async (socket) => {
     console.log('User connected', socket.id)
     
     socket.on('mensaje-nuevo', async (data) => {
+        //para sql lit
         await containerLite.save(data)
+        //await comentario.save(data)
         messages.push(data)
-        const mensaje = {
-            m: 'texto agregado',
-            messages
-        }
-        io.sockets.emit('mensaje-servidor', mensaje)
+        io.sockets.emit('mensaje-servidor', messages)
     })
     //////// catalogo //////////////
 
@@ -228,7 +253,7 @@ routerProductos.post('/nuevoProducto', async (req, res) => {
 
 ///////////////// Productos ////////////
 
-routerProductos.get('/', async (req,  res) => {
+/* routerProductos.get('/', async (req,  res) => {
     try{
         const allProducts = await producto.getAll() 
         res.json(allProducts)
@@ -241,7 +266,7 @@ routerProductos.get('/', async (req,  res) => {
 routerProductos.get('/:id', async (req, res)=> {
     const idReq = req.params.id
     //con archivo
-    /* const productoId = await producto.getById(+idReq) */
+    //const productoId = await producto.getById(+idReq)
     //con mongo y firebase
     const productoId = await producto.getById(idReq)
     res.json(productoId);
@@ -261,7 +286,8 @@ routerProductos.put('/:id', async (req, res, ) => {
     const { id } = req.params
     const  {name, price, thumbnail} = req.body
     let updateProduct = {name, price, thumbnail}
-    /* await producto.updateById({id: parseInt(id), ...updateProduct}) */
+    //con archivo
+    //await producto.updateById({id: parseInt(id), ...updateProduct})
     //con mongo y firebase
     await producto.updateById({id:(id), ...updateProduct})
     res.json({
@@ -318,20 +344,31 @@ routerCarrito.get('/:id/productos', async (req,  res) => {
     catch(err){
         console.log(err)
     }
-})
+}) */
 
 /* routerCarrito.post('/:id/productos', async (req, res) => {
     const cart = await carrito.getById(id)
     cart.products.push()
-    console.log(cart)
-    res.json({
-        
-    })
+    await carrito.save()
+    res.json(cart.products)
+}) */
+
+/* routerCarrito.delete(':id/productos/:id_prod', async (req, res) => {
+    try{
+
+        res.json({
+
+        })
+    }
+    catch(err){
+        console.log(err)
+    }
 }) */
 
 ////////// Routes
 app.use('/api/productos', routerProductos) 
 app.use('/api/carrito', routerCarrito) 
+app.use('/api/productos-test', routerProductosTest)
 
 
 
