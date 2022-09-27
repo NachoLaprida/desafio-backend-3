@@ -12,26 +12,42 @@ const PORT = process.env.PORT || 8080
 const {faker} = require('@faker-js/faker')
 const {generateProducts} = require('./utils/generadorDeProductos')
 faker.locale = 'es'
-
+const fs = require('fs')
 const normalizr = require('normalizr')
 const {normalize, denormalize, schema } = normalizr
-const originalComments = require('./txt/comentarios.txt')
+
+
+const resultBuffer = fs.readFileSync('./txt/comentarios.txt');
+const originalComments = JSON.parse(resultBuffer.toString().trim());
+
 
 //Definir los esquemas
-const userSchema = new schema.Entity('users', {}, { idAttribute: "id" })
-const commentSchema = new schema.Entity('comments')
+const authorSchema = new schema.Entity('author')
+const messageSchema = new schema.Entity('message')
 
-const messageSchema = new schema.Entity('articles', {
-    author: userSchema,
-    comments: commentSchema
-})
+const finalSchema = [
+	{
+		author: authorSchema,
+		message: messageSchema
+	}
+]
+
 
 // ---------------------- Datos Originales ----------------
 const msj = originalComments
-console.log(JSON.stringify(msj).length)
+console.log('original ',(JSON.stringify(msj).length))
+//591
 // ---------------------- Datos Normalizado ----------------
-const normalizedComments = normalize(originalComments, messageSchema)
-console.log(JSON.stringify(normalizedComments).length)
+const normalizedComments = normalize(msj, finalSchema)
+console.log('normalizado ',(JSON.stringify(normalizedComments).length))
+//498
+
+// ---------------------- Datos Denormalizado ----------------
+const denormalizedComments = denormalize(normalizedComments, finalSchema, normalizedComments.entities)
+console.log('denormalizado ',(JSON.stringify(denormalizedComments).length))
+//498
+
+
 //desafio faker consigna 1
 routerProductosTest.get('/', (req, res) => {
         const productos = generateProducts(5) 

@@ -2,12 +2,12 @@ const socket = io.connect()
 
 
 //////////// chat //////////////////
-const renderChat = (chat) => {
-    console.log(chat)
+const renderChat = (chatHistory) => {
+    console.log(chatHistory)
     let mensajes = document.querySelector(`#chat`)
-    let html = chat.map(text => {
+    let html = chatHistory.map(chat => {
         return `<div>
-            <p class="fyh">[${fecha.day}/${fecha.month}/${fecha.year} ${hora.hour}:${hora.minutes}:${hora.seconds}] : <i class="texto"> ${text.mensaje.message}</i></p>
+            <p class="fyh">[${chat.dateTime}] <strong>${chat.author.id}</strong>: <i class="texto"> ${chat.message}</i></p>
         </div>`
     })
     
@@ -28,9 +28,9 @@ const addText = (evt) => {
         dateTime: new Date()   
     }
     
-    const enviar = {mensaje}
+    /* const enviar = {mensaje} */
 
-    socket.emit('mensaje-nuevo', enviar, (id) => {
+    socket.emit('mensaje-nuevo', mensaje, (id) => {
     console.log(id)
     })
     return false
