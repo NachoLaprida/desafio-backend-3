@@ -15,17 +15,23 @@ faker.locale = 'es'
 
 const normalizr = require('normalizr')
 const {normalize, denormalize, schema } = normalizr
+const originalComments = require('./txt/comentarios.txt')
 
-const authorSchema = new schema.Entity('authors')
-
+//Definir los esquemas
+const userSchema = new schema.Entity('users', {}, { idAttribute: "id" })
 const commentSchema = new schema.Entity('comments')
 
-const postSchema = new schema.Entity('posts', {
-    author: authorSchema,
-    comments: [commentSchema]
+const messageSchema = new schema.Entity('articles', {
+    author: userSchema,
+    comments: commentSchema
 })
 
-
+// ---------------------- Datos Originales ----------------
+const msj = originalComments
+console.log(JSON.stringify(msj).length)
+// ---------------------- Datos Normalizado ----------------
+const normalizedComments = normalize(originalComments, messageSchema)
+console.log(JSON.stringify(normalizedComments).length)
 //desafio faker consigna 1
 routerProductosTest.get('/', (req, res) => {
         const productos = generateProducts(5) 
@@ -206,8 +212,8 @@ io.on('connection', async (socket) => {
     
     socket.on('mensaje-nuevo', async (data) => {
         //para sql lit
-        await containerLite.save(data)
-        //await comentario.save(data)
+        //await containerLite.save(data)
+        await comentario.save(data)
         messages.push(data)
         io.sockets.emit('mensaje-servidor', messages)
     })
