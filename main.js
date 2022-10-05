@@ -15,6 +15,13 @@ faker.locale = 'es'
 const fs = require('fs')
 const normalizr = require('normalizr')
 const {normalize, denormalize, schema } = normalizr
+const session = require('express-session')
+const MongoStore = require('connect-mongo')
+
+const mongoConfig = {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+}
 
 
 const resultBuffer = fs.readFileSync('./txt/comentarios.txt');
@@ -94,8 +101,18 @@ const container = new Container(knexMariaDB, 'desafioSQL')
 const containerLite = new Container(knexSqlLite, 'comentariosSQL')
 
 
-
-
+//mongo atlas
+app.use(session({
+    secret: '123456',
+    resave: true,
+    saveUninitialized: true,
+    //mongo atlas
+    store: MongoStore.create({ mongoUrl: 'mongodb+srv://Nacholi:parlamento88@cluster0.8viuxhq.mongodb.net/?retryWrites=true&w=majority', mongoOptions: mongoConfig}),
+    cookie: {
+        maxAge: 60000
+    }
+    
+}))
 
 ///// desafio base de datos
 /* const item = [
@@ -143,17 +160,47 @@ const containerLite = new Container(knexSqlLite, 'comentariosSQL')
 //batch() */
 
 routerProductos.get('', async (req, res) => {
+    const login = req.session
+    console.log(`se logueo ${login.username}`)
+    /* if (login.username && login.password){
+        res.write(`<h1>Bievenido ${login.username}</h1><br>`)
+        res.end("<a href=" + "/logout" + ">Cerrar Sesion</a >")
+    } else{
+        console.log('no te logueaste')
+    } */
+
     const producto = await contenedor.getAll()
     res.render('pages/index.ejs', { 
-        listaProductos: producto
+        listaProductos: producto,
+        username: login.username
     })
 })
+routerProductos.get('/logout', async (req, res) => {
+    const producto = await contenedor.getAll()
+    req.session.destroy(err => {
+		if (err) {
+			return console.log(err)
+		}
+	})
+    res.render('pages/index.ejs', { 
+        listaProductos: producto,
+        username: null
+    })
+})
+
 routerProductos.get('/:id', async (req, res)=> {
     const idReq = req.params.id
     const productoId = await container.getById(+idReq); //consultar que hace el +
     res.json(productoId);
 })
 routerProductos.post('', async(req, res) => {
+    const login = req.session
+    const {username, password} = req.body
+    login.username = username
+    login.password = password
+    console.log(`seooo logueo ${login.password}`)
+    
+
     const newProduct  = req.body
     await container.save(newProduct) 
     res.json({

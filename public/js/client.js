@@ -107,6 +107,31 @@ socket.on('connect', () => {
 })
 
 
+//////////////////////////////// desafio redis /////////////
+
+const btn = document.querySelector('#boton')
+btn.addEventListener('click', e => {
+    e.preventDefault()
+    const url = "http://localhost:8080/api/productos"
+    let username = document.querySelector("#usuario").value
+    let password = document.querySelector("#password").value
+    return fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password })
+    })
+    .then(res => {
+        if (res.status === 200) {
+            window.location.href = "http://localhost:8080/api/productos";
+        }
+    })
+    .catch(err => {
+        console.log(err);
+    })
+})
+
+
+
 
 
 

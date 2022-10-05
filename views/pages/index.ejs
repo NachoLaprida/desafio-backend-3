@@ -11,6 +11,32 @@
     <title>Desafio con Ejs</title>
 </head>
     <body>
+        <section class="container">
+            <% if(username) { %>
+                <h1>Bievenido <%= username %></h1>
+                <a href="productos/logout">logout</a>
+            <% }else{ %>
+                <h1>No te logueaste</h1>
+            <% } %>
+            <div class="login container" >
+                <h2 style="color:blue">Ingrese Producto</h2>
+                <form action="">
+                    <div class="form-group">
+                        <label for="Usuario">Usuario</label>
+                        <input  type="text" class="form-control col-6" id="usuario" name="usuario"
+                            placeholder="Ingresa tu usuario" />
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Contraseña</label>
+                        <input  type="password" class="form-control col-6" id="password" name="password"
+                            placeholder="Ingresa tu contraseña" />
+                    </div>
+                    <br>
+                    <input class="btn btn-primary" type="submit" value="Login" id="boton">
+                </form>
+            </div>
+        </section>
+        
         <h1 class="text-center">Camisetas del Mundial 2022</h1>
         <div class="container d-flex flex-row flex-wrap" id="nacho">
             <% if(listaProductos.length > 0) {%>
@@ -82,6 +108,8 @@
                     <input class="btn btn-primary" type="submit" value="Enviar">
                 </form>
             </div>
+
+            
         </div>
         
 
