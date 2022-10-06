@@ -18,6 +18,8 @@ const {normalize, denormalize, schema } = normalizr
 const session = require('express-session')
 const MongoStore = require('connect-mongo')
 
+
+//config mongo atlas
 const mongoConfig = {
     useNewUrlParser: true,
     useUnifiedTopology: true
@@ -159,31 +161,29 @@ app.use(session({
 }
 //batch() */
 
+routerProductos.get('/login', async (req, res) => {
+    const login = req.session
+    res.render('pages/login.ejs', { 
+        username: login.username
+    })
+})
+
 routerProductos.get('', async (req, res) => {
     const login = req.session
     console.log(`se logueo ${login.username}`)
-    /* if (login.username && login.password){
-        res.write(`<h1>Bievenido ${login.username}</h1><br>`)
-        res.end("<a href=" + "/logout" + ">Cerrar Sesion</a >")
-    } else{
-        console.log('no te logueaste')
-    } */
-
-    const producto = await contenedor.getAll()
+        const producto = await contenedor.getAll()
     res.render('pages/index.ejs', { 
         listaProductos: producto,
         username: login.username
     })
 })
 routerProductos.get('/logout', async (req, res) => {
-    const producto = await contenedor.getAll()
     req.session.destroy(err => {
 		if (err) {
 			return console.log(err)
 		}
 	})
-    res.render('pages/index.ejs', { 
-        listaProductos: producto,
+    res.render('pages/logout.ejs', { 
         username: null
     })
 })
