@@ -109,24 +109,50 @@ socket.on('connect', () => {
 
 //////////////////////////////// desafio redis /////////////
 
-const btn = document.querySelector('#boton')
-btn.addEventListener('click', e => {
+
+const btnLogin = document.querySelector('#submit-login')
+btnLogin && btnLogin.addEventListener('click', e => {
     e.preventDefault()
-    const url = "http://localhost:8080/api/productos"
-    let username = document.querySelector("#usuario").value
+    const url = "http://localhost:8080/api/usuarios/login"
+    let email = document.querySelector("#email").value
     let password = document.querySelector("#password").value
     return fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password })
+        body: JSON.stringify({ email, password })
     })
     .then(res => {
-        if (res.status === 200) {
-            window.location.href = "http://localhost:8080/api/productos";
+        if (res.status !== 200) {
+            window.location.href = "http://localhost:8080/api/usuarios/login/error"
+            return
         }
+        window.location.href = "http://localhost:8080/api/productos";
     })
     .catch(err => {
-        console.log(err);
+        window.location.href = "http://localhost:8080/api/usuarios/login/error"
+    })
+})
+
+const btnRegistro = document.querySelector('#submit-registro')
+btnRegistro && btnRegistro.addEventListener('click', e => {
+    e.preventDefault()
+    const url = "http://localhost:8080/api/usuarios/registro"
+    let email = document.querySelector("#email").value
+    let password = document.querySelector("#password").value
+    return fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password })
+    })
+    .then(res => {
+        if (res.status !== 200) {
+            window.location.href = "http://localhost:8080/api/usuarios/registro/error"
+            return
+        }
+        window.location.href = "http://localhost:8080/api/usuarios/login"
+    })
+    .catch(err => {
+        window.location.href = "http://localhost:8080/api/usuarios/registro/error"
     })
 })
 

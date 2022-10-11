@@ -3,6 +3,7 @@ const {Comentario} = require("./comentario")
 const {ContenedorArchivo} = require("./contenedores/contenedorArchivo")
 const {Router} = express
 const routerProductos = Router()
+const routerUsuarios = Router()
 const routerCarrito = Router()
 const routerProductosTest = Router()
 const routerProductosRandom = Router()
@@ -11,12 +12,17 @@ const {Server: IOServer} = require('socket.io')
 const PORT = process.env.PORT || 8080
 const {faker} = require('@faker-js/faker')
 const {generateProducts} = require('./utils/generadorDeProductos')
+const {checkAuth, isValidPassword, createHash} = require('./utils/checkAuth')
 faker.locale = 'es'
 const fs = require('fs')
 const normalizr = require('normalizr')
 const {normalize, denormalize, schema } = normalizr
 const session = require('express-session')
 const MongoStore = require('connect-mongo')
+
+const passport = require('passport')
+const LocalStrategy = require('passport-local').Strategy
+const bcrypt = require('bcrypt')
 
 
 //config mongo atlas
@@ -107,14 +113,37 @@ const containerLite = new Container(knexSqlLite, 'comentariosSQL')
 app.use(session({
     secret: '123456',
     resave: true,
-    saveUninitialized: true,
     //mongo atlas
     store: MongoStore.create({ mongoUrl: 'mongodb+srv://Nacholi:parlamento88@cluster0.8viuxhq.mongodb.net/?retryWrites=true&w=majority', mongoOptions: mongoConfig}),
+    //agregue para desafio passport
     cookie: {
-        maxAge: 60000
-    }
-    
+        httpOnly: true, 
+        secure: false,
+        maxAge: 1000 * 60 * 10
+    },
+    rolling: true,
+    saveUninitialized: false
 }))
+//passport
+app.use(passport.initialize())
+app.use(passport.session())
+
+const Users = []
+
+
+
+
+/////////////////////// passport serialize /////////////
+
+passport.serializeUser((user, done) => {
+    done(null, user.email)
+})
+
+passport.deserializeUser((email, done) => {
+    let user = Users.find( user => user.email === email)
+    done(null, user)
+})
+
 
 ///// desafio base de datos
 /* const item = [
@@ -161,30 +190,13 @@ app.use(session({
 }
 //batch() */
 
-routerProductos.get('/login', async (req, res) => {
-    const login = req.session
-    res.render('pages/login.ejs', { 
-        username: login.username
-    })
-})
-
 routerProductos.get('', async (req, res) => {
     const login = req.session
-    console.log(`se logueo ${login.username}`)
-        const producto = await contenedor.getAll()
+    console.log(`se logueo ${login.passport.user}`)
+    const producto = await contenedor.getAll()
     res.render('pages/index.ejs', { 
         listaProductos: producto,
-        username: login.username
-    })
-})
-routerProductos.get('/logout', async (req, res) => {
-    req.session.destroy(err => {
-		if (err) {
-			return console.log(err)
-		}
-	})
-    res.render('pages/logout.ejs', { 
-        username: null
+        email: login.passport.user
     })
 })
 
@@ -192,20 +204,6 @@ routerProductos.get('/:id', async (req, res)=> {
     const idReq = req.params.id
     const productoId = await container.getById(+idReq); //consultar que hace el +
     res.json(productoId);
-})
-routerProductos.post('', async(req, res) => {
-    const login = req.session
-    const {username, password} = req.body
-    login.username = username
-    login.password = password
-    console.log(`seooo logueo ${login.password}`)
-    
-
-    const newProduct  = req.body
-    await container.save(newProduct) 
-    res.json({
-        producto: newProduct 
-    })
 })
 routerProductos.put('/:id', async (req, res, ) => {
     const { id } = req.params
@@ -229,6 +227,64 @@ routerProductos.delete('/', async (req, res) => {
         msg: 'se borraron todos los productos' 
     })  
 })
+
+routerUsuarios.get('/registro', (req, res) => {
+    res.render('pages/register.ejs')
+} )
+routerUsuarios.get('/login', (req, res) => {
+    res.render('pages/login.ejs')
+} )
+
+routerUsuarios.get('/registro/error', (req, res) => {
+    res.render('pages/failRegister.ejs')
+})
+routerUsuarios.get('/login/error', (req, res) => {
+    res.render('pages/failLogin.ejs')
+    
+})
+routerUsuarios.post('/registro', async(req, res) => {
+    let {email, password} = req.body
+    let user = Users.find(x => x.email == email)
+    if(user){
+        res.status(400)
+        res.json()
+    } else {
+        Users.push({email, password: createHash(password)}) 
+        res.json('Usuario creado')
+    }
+})
+routerUsuarios.post('/login', passport.authenticate('login', {
+        successRedirect: '/api/productos',
+        failureRedirect: '/api/usuarios/login/error',
+    }), (req, res) => {
+    res.json('Bienvenido usuario')
+})
+routerUsuarios.get('/logout', async (req, res) => {
+    req.session.destroy(err => {
+		if (err) {
+			return console.log(err)
+		}
+	})
+    res.render('pages/logout.ejs', { 
+        username: null
+    })
+})
+
+passport.use('login', new LocalStrategy({usernameField:'email', passwordField:'password', passReqToCallback: true},
+    async (req , email, password, done) => {
+        let user = Users.find( user => user.email === email)
+        if(!user){
+            console.log(`No existe el usuario ${email}`)
+            return done(null, false)
+        }
+        if(!isValidPassword(user, password)) {
+            console.log('Password Incorrecto')
+            return done(null, false)
+        }
+        done(null, user)
+    }
+))
+
 
 /*const comments = [
 	{
@@ -435,7 +491,8 @@ routerCarrito.get('/:id/productos', async (req,  res) => {
 }) */
 
 ////////// Routes
-app.use('/api/productos', routerProductos) 
+app.use('/api/productos', checkAuth,routerProductos) 
+app.use('/api/usuarios', routerUsuarios) 
 app.use('/api/carrito', routerCarrito) 
 app.use('/api/productos-test', routerProductosTest)
 

@@ -12,9 +12,9 @@
 </head>
     <body>
         <section class="container">
-            <% if(username) { %>
-                <h1>Bievenido <%= username %></h1>
-                <a href="productos/logout">logout</a>
+            <% if(email) { %>
+                <h1>Bievenido <%= email %></h1>
+                <a href="http://localhost:8080/api/usuarios/logout">logout</a>
             <% }else{ %>
                 <h1>No te logueaste</h1>
             <% } %>
