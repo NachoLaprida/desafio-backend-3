@@ -72,6 +72,9 @@ routerProductosTest.get('/', (req, res) => {
 })
 
 
+const UsuarioDaoMongoDB = require("./daos/usuarios/usuariosDaoMongoDB")
+const usuario = new UsuarioDaoMongoDB
+
 //const CarritoDaoArchivo = require("./daos/carritos/carritoDaoArchivo")
 //const {CarritoDaoMongoDB} = require("./daos/carritos/carritoDaoMongoDB")
 //const {CarritoDaoFirebase} = require("./daos/carritos/carritoDaoFirebase")
@@ -139,8 +142,8 @@ passport.serializeUser((user, done) => {
     done(null, user.email)
 })
 
-passport.deserializeUser((email, done) => {
-    let user = Users.find( user => user.email === email)
+passport.deserializeUser( async (email, done) => {
+    let user = await usuario.getByEmail( email)
     done(null, user)
 })
 
@@ -228,36 +231,38 @@ routerProductos.delete('/', async (req, res) => {
     })  
 })
 
+////////////////////////////// REGISTRO Y LOGIN //////////////////////
+
 routerUsuarios.get('/registro', (req, res) => {
     res.render('pages/register.ejs')
 } )
-routerUsuarios.get('/login', (req, res) => {
-    res.render('pages/login.ejs')
-} )
-
-routerUsuarios.get('/registro/error', (req, res) => {
-    res.render('pages/failRegister.ejs')
-})
-routerUsuarios.get('/login/error', (req, res) => {
-    res.render('pages/failLogin.ejs')
-    
-})
 routerUsuarios.post('/registro', async(req, res) => {
     let {email, password} = req.body
-    let user = Users.find(x => x.email == email)
+    let user = await usuario.getByEmail(email)
     if(user){
         res.status(400)
         res.json()
     } else {
-        Users.push({email, password: createHash(password)}) 
+        usuario.save({email, password: createHash(password)}) 
         res.json('Usuario creado')
     }
 })
+routerUsuarios.get('/registro/error', (req, res) => {
+    res.render('pages/failRegister.ejs')
+})
+
+routerUsuarios.get('/login', (req, res) => {
+    res.render('pages/login.ejs')
+} )
 routerUsuarios.post('/login', passport.authenticate('login', {
-        successRedirect: '/api/productos',
-        failureRedirect: '/api/usuarios/login/error',
-    }), (req, res) => {
-    res.json('Bienvenido usuario')
+    successRedirect: '/api/productos',
+    failureRedirect: '/api/usuarios/login/error',
+}), (req, res) => {
+res.json('Bienvenido usuario')
+})
+routerUsuarios.get('/login/error', (req, res) => {
+    res.render('pages/failLogin.ejs')
+    
 })
 routerUsuarios.get('/logout', async (req, res) => {
     req.session.destroy(err => {
@@ -269,10 +274,12 @@ routerUsuarios.get('/logout', async (req, res) => {
         username: null
     })
 })
+////////////////////////////////////////////////////////////////
 
+///////////////////// PASSPORT ////////////////////////////////
 passport.use('login', new LocalStrategy({usernameField:'email', passwordField:'password', passReqToCallback: true},
     async (req , email, password, done) => {
-        let user = Users.find( user => user.email === email)
+        let user = await usuario.getByEmail(email)
         if(!user){
             console.log(`No existe el usuario ${email}`)
             return done(null, false)
@@ -285,6 +292,33 @@ passport.use('login', new LocalStrategy({usernameField:'email', passwordField:'p
     }
 ))
 
+/* passport.use('register', new LocalStrategy({usernameField:'email', passwordField:'password', passReqToCallback: true},
+    async (req , email, password, done) => {
+        let user = await usuario.find({email: email})
+        .then(user => console.log(user))
+        .catch(error => console.log('Error buscando user' + error))
+        if(user){
+            return done(null, user.email)
+        } else {
+            password2 = req.body.password2
+            if(password != password2){
+                console.log(`La contraseña no es la misma`)
+                done(null, user)
+            }
+            else{
+                const newUser = new usuario()
+                newUser.email = email
+                newUser.password = password
+                await newUser.save()
+                .then('user added')
+                .catch(error => console.log('error to add user' + error))
+                done(nuell, newUser.email)
+            }
+        }
+    }
+)) */
+
+/////////////////////////////////
 
 /*const comments = [
 	{
@@ -348,7 +382,7 @@ io.on('connection', async (socket) => {
         console.log('el email es',data)
     })
 
-}) |
+}) 
 
 
 
