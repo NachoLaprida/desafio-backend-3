@@ -7,6 +7,7 @@ const routerUsuarios = Router()
 const routerCarrito = Router()
 const routerProductosTest = Router()
 const routerProductosRandom = Router()
+const routerRandom = Router()
 const {Server: HttpServer} = require('http')
 const {Server: IOServer} = require('socket.io')
 const PORT = process.env.PORT || 8080
@@ -19,6 +20,9 @@ const normalizr = require('normalizr')
 const {normalize, denormalize, schema } = normalizr
 const session = require('express-session')
 const MongoStore = require('connect-mongo')
+require('dotenv').config()
+const http = require('http') 
+const { fork } = require('child_process')
 
 const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
@@ -108,6 +112,7 @@ const { optionsSQLlite } = require('./config/conexionSQLITEDB')
 const knexMariaDB = require('knex')(optionsMariaDB)
 const knexSqlLite = require('knex')(optionsSQLlite)
 const {Container} = require('./contenedores/containerSQLDB')
+const { cwd, execArgv } = require('process')
 const container = new Container(knexMariaDB, 'desafioSQL')
 const containerLite = new Container(knexSqlLite, 'comentariosSQL')
 
@@ -117,7 +122,7 @@ app.use(session({
     secret: '123456',
     resave: true,
     //mongo atlas
-    store: MongoStore.create({ mongoUrl: 'mongodb+srv://Nacholi:parlamento88@cluster0.8viuxhq.mongodb.net/?retryWrites=true&w=majority', mongoOptions: mongoConfig}),
+    store: MongoStore.create({ mongoUrl: process.env.MONGO_ATLAS, mongoOptions: mongoConfig}),
     //agregue para desafio passport
     cookie: {
         httpOnly: true, 
@@ -276,6 +281,51 @@ routerUsuarios.get('/logout', async (req, res) => {
 })
 ////////////////////////////////////////////////////////////////
 
+////////////////////////////// INFO //////////////////////
+
+app.get('/info', (req, res) => {
+    const information = {
+        cwd: process.cwd(),
+        pid: process.pid,
+        ppid: process.ppid,
+        version: process.version,
+        title: process.title,
+        platform: process.platform,
+        memoryUsage: process.memoryUsage().rss,
+        execPath: process.execPath,
+        execArgv: process.execArgv
+    }
+    res.render('pages/info.ejs', {
+        cwd: information.cwd,
+        pid: information.pid,
+        ppid: information.ppid,
+        version: information.version,
+        title: information.title,
+        platform: information.platform,
+        memoryUsage: information.memoryUsage,
+        execPath: information.execPath,
+        execArgv: information.execArgv
+    })
+})
+
+////////////////////////////////////////////////////////////////
+
+//////////////////// RANDOM ///////////////////////////////////
+
+
+routerRandom.get('/', (req, res) => {
+    let cant =  req.query.cant !== undefined ? parseInt(req.query.cant) : 100000000
+    const computo = fork('./random.js')
+    computo.send(cant)
+    computo.on('message', mensaje => {
+        res.end(mensaje)
+    })
+})
+
+////////////////////////////////////////////////////////////////
+
+
+
 ///////////////////// PASSPORT ////////////////////////////////
 passport.use('login', new LocalStrategy({usernameField:'email', passwordField:'password', passReqToCallback: true},
     async (req , email, password, done) => {
@@ -291,32 +341,6 @@ passport.use('login', new LocalStrategy({usernameField:'email', passwordField:'p
         done(null, user)
     }
 ))
-
-/* passport.use('register', new LocalStrategy({usernameField:'email', passwordField:'password', passReqToCallback: true},
-    async (req , email, password, done) => {
-        let user = await usuario.find({email: email})
-        .then(user => console.log(user))
-        .catch(error => console.log('Error buscando user' + error))
-        if(user){
-            return done(null, user.email)
-        } else {
-            password2 = req.body.password2
-            if(password != password2){
-                console.log(`La contraseña no es la misma`)
-                done(null, user)
-            }
-            else{
-                const newUser = new usuario()
-                newUser.email = email
-                newUser.password = password
-                await newUser.save()
-                .then('user added')
-                .catch(error => console.log('error to add user' + error))
-                done(nuell, newUser.email)
-            }
-        }
-    }
-)) */
 
 /////////////////////////////////
 
@@ -529,6 +553,7 @@ app.use('/api/productos', checkAuth,routerProductos)
 app.use('/api/usuarios', routerUsuarios) 
 app.use('/api/carrito', routerCarrito) 
 app.use('/api/productos-test', routerProductosTest)
+app.use('/api/random', routerRandom)
 
 
 
