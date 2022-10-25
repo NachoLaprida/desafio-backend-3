@@ -10,7 +10,7 @@ const routerProductosRandom = Router()
 const routerRandom = Router()
 const {Server: HttpServer} = require('http')
 const {Server: IOServer} = require('socket.io')
-const PORT = process.env.PORT || 8080
+const PORT = process.argv[2] || 8080
 const {faker} = require('@faker-js/faker')
 const {generateProducts} = require('./utils/generadorDeProductos')
 const {checkAuth, isValidPassword, createHash} = require('./utils/checkAuth')
@@ -27,6 +27,8 @@ const { fork } = require('child_process')
 const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
 const bcrypt = require('bcrypt')
+const numCPUs = require('os').cpus().length
+
 
 
 //config mongo atlas
@@ -112,7 +114,7 @@ const { optionsSQLlite } = require('./config/conexionSQLITEDB')
 const knexMariaDB = require('knex')(optionsMariaDB)
 const knexSqlLite = require('knex')(optionsSQLlite)
 const {Container} = require('./contenedores/containerSQLDB')
-const { cwd, execArgv } = require('process')
+const { cwd, execArgv, argv } = require('process')
 const container = new Container(knexMariaDB, 'desafioSQL')
 const containerLite = new Container(knexSqlLite, 'comentariosSQL')
 
@@ -293,7 +295,10 @@ app.get('/info', (req, res) => {
         platform: process.platform,
         memoryUsage: process.memoryUsage().rss,
         execPath: process.execPath,
-        execArgv: process.execArgv
+        execArgv: process.execArgv,
+        numCPUs: numCPUs,
+        cpuUsage: JSON.stringify(process.cpuUsage())
+
     }
     res.render('pages/info.ejs', {
         cwd: information.cwd,
@@ -304,7 +309,9 @@ app.get('/info', (req, res) => {
         platform: information.platform,
         memoryUsage: information.memoryUsage,
         execPath: information.execPath,
-        execArgv: information.execArgv
+        execArgv: information.execArgv,
+        numCPUs: information.numCPUs,
+        cpuUsage: information.cpuUsage
     })
 })
 
@@ -562,7 +569,7 @@ app.use('/api/random', routerRandom)
 
 
 
-const server = httpServer.listen(PORT, () => {
+const server = app.listen(PORT, () => {
     console.log(`Escuchando el puerto ${server.address().port}`)
 })
 
