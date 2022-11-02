@@ -28,7 +28,8 @@ const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
 const bcrypt = require('bcrypt')
 const numCPUs = require('os').cpus().length
-
+const compression = require('compression')
+const logger = require('./logs/log4js')
 
 
 //config mongo atlas
@@ -104,6 +105,7 @@ const app = express()
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(express.static('public'))
+/* app.use(compression()) */
 
 const httpServer = new HttpServer(app)
 const io = new IOServer(httpServer)
@@ -286,34 +288,75 @@ routerUsuarios.get('/logout', async (req, res) => {
 ////////////////////////////// INFO //////////////////////
 
 app.get('/info', (req, res) => {
-    const information = {
-        cwd: process.cwd(),
-        pid: process.pid,
-        ppid: process.ppid,
-        version: process.version,
-        title: process.title,
-        platform: process.platform,
-        memoryUsage: process.memoryUsage().rss,
-        execPath: process.execPath,
-        execArgv: process.execArgv,
-        numCPUs: numCPUs,
-        cpuUsage: JSON.stringify(process.cpuUsage())
+    try{
+        const information = {
+            cwd: process.cwd(),
+            pid: process.pid,
+            ppid: process.ppid,
+            version: process.version,
+            title: process.title,
+            platform: process.platform,
+            memoryUsage: process.memoryUsage().rss,
+            execPath: process.execPath,
+            execArgv: process.execArgv,
+            numCPUs: numCPUs,
+            cpuUsage: JSON.stringify(process.cpuUsage())
+    
+        }
+        res.render('pages/info.ejs', {
+            cwd: information.cwd,
+            pid: information.pid,
+            ppid: information.ppid,
+            version: information.version,
+            title: information.title,
+            platform: information.platform,
+            memoryUsage: information.memoryUsage,
+            execPath: information.execPath,
+            execArgv: information.execArgv,
+            numCPUs: information.numCPUs,
+            cpuUsage: information.cpuUsage
+        })
 
+    } catch (err) {
+        logger.error(err)
     }
-    res.render('pages/info.ejs', {
-        cwd: information.cwd,
-        pid: information.pid,
-        ppid: information.ppid,
-        version: information.version,
-        title: information.title,
-        platform: information.platform,
-        memoryUsage: information.memoryUsage,
-        execPath: information.execPath,
-        execArgv: information.execArgv,
-        numCPUs: information.numCPUs,
-        cpuUsage: information.cpuUsage
-    })
 })
+
+app.get('/infogzip', compression(), (req, res) => {
+    try{
+        const information = {
+            cwd: process.cwd(),
+            pid: process.pid,
+            ppid: process.ppid,
+            version: process.version,
+            title: process.title,
+            platform: process.platform,
+            memoryUsage: process.memoryUsage().rss,
+            execPath: process.execPath,
+            execArgv: process.execArgv,
+            numCPUs: numCPUs,
+            cpuUsage: JSON.stringify(process.cpuUsage())
+    
+        }
+        res.render('pages/infogzip.ejs', {
+            cwd: information.cwd,
+            pid: information.pid,
+            ppid: information.ppid,
+            version: information.version,
+            title: information.title,
+            platform: information.platform,
+            memoryUsage: information.memoryUsage,
+            execPath: information.execPath,
+            execArgv: information.execArgv,
+            numCPUs: information.numCPUs,
+            cpuUsage: information.cpuUsage
+        })
+
+    } catch (err) {
+        logger.error(err)
+    }
+})
+
 
 ////////////////////////////////////////////////////////////////
 
@@ -321,12 +364,18 @@ app.get('/info', (req, res) => {
 
 
 routerRandom.get('/', (req, res) => {
-    let cant =  req.query.cant !== undefined ? parseInt(req.query.cant) : 100000000
-    const computo = fork('./random.js')
-    computo.send(cant)
-    computo.on('message', mensaje => {
-        res.end(mensaje)
-    })
+    try{
+        let cant =  req.query.cant !== undefined ? parseInt(req.query.cant) : 100000000
+        const computo = fork('./random.js')
+        computo.send(cant)
+        logger.error(`error`)
+        computo.on('message', mensaje => {
+            res.end(mensaje)
+        }) 
+    } catch(err) {
+        logger.error(`error aca ${err}`)
+    }
+    
 })
 
 ////////////////////////////////////////////////////////////////
@@ -561,10 +610,11 @@ app.use('/api/usuarios', routerUsuarios)
 app.use('/api/carrito', routerCarrito) 
 app.use('/api/productos-test', routerProductosTest)
 app.use('/api/random', routerRandom)
+app.use((req,res,next)=>{
+    logger.warn("URL requested does not exist");
+    res.sendStatus('404')
 
-
-
-
+})
 
 
 
@@ -575,6 +625,7 @@ const server = app.listen(PORT, () => {
 
 server.on('error', (err) => {
     console.log(err)
+    logger.error('no conecto con el puerto')
 })
 
 

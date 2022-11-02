@@ -46,3 +46,7 @@
 //GET http://localhost:8080/api/carrito/F8J2bsm84uU5WMJzgJkl/productos HTTP/1.1
 //content-type : application/json 
 
+GET http://localhost:8081/info HTTP/1.1
+content-type : application/json 
+
+
