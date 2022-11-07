@@ -10,7 +10,9 @@ const routerProductosRandom = Router()
 const routerRandom = Router()
 const {Server: HttpServer} = require('http')
 const {Server: IOServer} = require('socket.io')
+require('dotenv').config()
 const PORT = process.env.PORT //process.argv[2] || 8080 lo cambie para heroku
+console.log(PORT)
 const {faker} = require('@faker-js/faker')
 const {generateProducts} = require('./utils/generadorDeProductos')
 const {checkAuth, isValidPassword, createHash} = require('./utils/checkAuth')
@@ -620,7 +622,7 @@ app.use((req,res,next)=>{
 
 
 const server = app.listen(PORT, () => {
-    console.log(`Escuchando el puerto ${server.address().port}`)
+    console.log(`Escuchando el puerto ${PORT}`)
 })
 
 server.on('error', (err) => {
