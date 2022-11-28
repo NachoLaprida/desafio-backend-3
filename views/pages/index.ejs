@@ -11,96 +11,137 @@
     <title>Desafio con Ejs</title>
 </head>
     <body>
-        <section class="container">
+        <header>
+            <nav class="navbar navbar-expand-lg navbar-light">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="">
+                        <img class="logo" src="../../public/images/t-shirt.jpg" alt="">
+                    </a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse justify-content-around" id="navbarNav">
+                        <ul class="navbar-nav">
+                            <li class="nav-item m-3">
+                                <a class="nav-link text-center" aria-current="page" href="#" onclick="goToCart()">Carrito</a>
+                            </li>
+                            <li class="nav-item m-3">
+                                <a class="nav-link text-center" aria-current="page" href="#" onclick="goToProfile()">Perfil</a>
+                            </li>
+                            <li class="nav-item m-3">
+                                <a class="nav-link text-center" aria-current="page" href="#" onclick="goToLogOut()">Cerrar Sesión</a>
+                            </li>
+                        </ul>
+                        <ul class="navbar-nav">
+                            <li class="nav-item">
+                                <a class="nav-link text-center" aria-current="page"><%= email %></a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="" >
+                                    <img class="logo" src="../../public/images/t-shirt.jpg" alt="">
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </header>
+        <!-- <section class="container">
             <% if(email) { %>
-                <h1>Bievenido <%= email %></h1>
-                <a href="http://localhost:8080/api/usuarios/logout">logout</a>
+                <h1>Bienvenido <%= email %></h1>
             <% }else{ %>
                 <h1>No te logueaste</h1>
             <% } %>
-        </section>
-        
-        <h1 class="text-center">Camisetas del Mundial 2022</h1>
-        <div class="container d-flex flex-row flex-wrap" id="nacho">
-            <% if(listaProductos.length > 0) {%>
-                    <% listaProductos.forEach( prod => { %>
-                        <div class="card tarjeta m-3" style="width: 18rem;">
-                            <img src=<%= prod.thumbnail %> class="card-img-top" alt="...">
-                            <div class="card-body">
-                                <h5 class="card-title"><%= prod.name %></h5>
-                                <h5 class="card-title">$<%= prod.price %></h5>
+        </section> -->
+        <main class="container">
+            <h1 class="text-center">Camisetas del Mundial 2022</h1>
+            <section>
+                <div class="container d-flex flex-row flex-wrap" id="nacho">
+                    <% if(listaProductos.length > 0) {%>
+                            <% listaProductos.forEach( prod => { %>
+                                <div class="card tarjeta m-3" style="width: 18rem;" id=<%= prod.id %>>
+                                    <img src=<%= prod.thumbnail %> class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><%= prod.name %></h5>
+                                        <h5 class="card-title">$<%= prod.price %></h5>
+                                    </div>
+                                    <button class="btn btn-primary" type="button" onclick='addToCart("<%= prod.id %>")'>+</button>
+                                </div>
+                            <% }) %>
+                    <% }else{ %>
+                        <h2>No hay productos</h2>
+                    <% } %>
+                </div>
+                <div class="container justify-content-center m-3">
+                    <%- include('../partials/form.ejs')  %>
+                </div>
+            </section>
+            <section>
+                <div id="catalogo" class="container d-flex flex-row flex-wrap">
+            
+
+                </div>
+            </section>
+            <section>
+                <div class="row">
+                    <div class="col">
+                        <ul id="chat">
+                            
+                        </ul>
+                    </div>
+                    <div class="col">
+                        <form action="" onsubmit="return addText(this)" class="mt-5">
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input  type="email" class="form-control col-6" id="email" name="email"
+                                    placeholder="Ingresa tu correo" />
                             </div>
-                        </div>
-                    <% }) %>
-            <% }else{ %>
-                <h2>No hay productos</h2>
-            <% } %>
-        </div>
-        <div class="container justify-content-center m-3">
-            <%- include('../partials/form.ejs')  %>
-        </div>
-    
-        <div id="catalogo" class="container d-flex flex-row flex-wrap">
-            
-
-        </div>
-        <div class="row">
-            <div class="col">
-                <ul id="chat">
-                    
-                </ul>
-            </div>
-            <div class="col">
-                <form action="" onsubmit="return addText(this)" class="mt-5">
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input  type="email" class="form-control col-6" id="email" name="email"
-                            placeholder="Ingresa tu correo" />
+                            <div class="form-group">
+                                <label for="firstName">Nombre</label>
+                                <input  type="text" class="form-control col-6" id="firstName" name="firstName"
+                                    placeholder="Ingresa tu nombre" />
+                            </div>
+                            <div class="form-group">
+                                <label for="lastName">Apellido</label>
+                                <input  type="text" class="form-control col-6" id="lastName" name="lastName"
+                                    placeholder="Ingresa tu apellido" />
+                            </div>
+                            <div class="form-group">
+                                <label for="age">Edad</label>
+                                <input  type="number" class="form-control col-6" id="age" name="age"
+                                    placeholder="Ingresa tu edad" />
+                            </div>
+                            <div class="form-group">
+                                <label for="alias">Alias</label>
+                                <input  type="text" class="form-control col-6" id="alias" name="alias"
+                                    placeholder="Ingresa tu alias" />
+                            </div>
+                            <div class="form-group">
+                                <label for="avatar">Avatar</label>
+                                <input  type="text" class="form-control col-6" id="avatar" name="avatar"
+                                    placeholder="Ingresa tu avatar" />
+                            </div>
+                            <div class="form-group">
+                                <label for="message">Mensaje</label>
+                                <input  type="text" class="form-control col-6" id="message" name="message"
+                                    placeholder="Ingresa tu mensaje" />
+                            </div>
+                            <br>
+                            <input class="btn btn-primary" type="submit" value="Enviar">
+                        </form>
                     </div>
-                    <div class="form-group">
-                        <label for="firstName">Nombre</label>
-                        <input  type="text" class="form-control col-6" id="firstName" name="firstName"
-                            placeholder="Ingresa tu nombre" />
-                    </div>
-                    <div class="form-group">
-                        <label for="lastName">Apellido</label>
-                        <input  type="text" class="form-control col-6" id="lastName" name="lastName"
-                            placeholder="Ingresa tu apellido" />
-                    </div>
-                    <div class="form-group">
-                        <label for="age">Edad</label>
-                        <input  type="number" class="form-control col-6" id="age" name="age"
-                            placeholder="Ingresa tu edad" />
-                    </div>
-                    <div class="form-group">
-                        <label for="alias">Alias</label>
-                        <input  type="text" class="form-control col-6" id="alias" name="alias"
-                            placeholder="Ingresa tu alias" />
-                    </div>
-                    <div class="form-group">
-                        <label for="avatar">Avatar</label>
-                        <input  type="text" class="form-control col-6" id="avatar" name="avatar"
-                            placeholder="Ingresa tu avatar" />
-                    </div>
-                    <div class="form-group">
-                        <label for="message">Mensaje</label>
-                        <input  type="text" class="form-control col-6" id="message" name="message"
-                            placeholder="Ingresa tu mensaje" />
-                    </div>
-                    <br>
-                    <input class="btn btn-primary" type="submit" value="Enviar">
-                </form>
-            </div>
-
-            
-        </div>
         
-
-
+                    
+                </div>
+            </section>
+            
+    
+        
+        
+        </main>
         <footer>
             <%- include('../partials/footer.ejs', {mensajeFooter: 'Proyecto CoderHouse curso backend || Ignacio Laprida'})%>
         </footer>
         
         <script src="/js/client.js"></script>
-    </body>
-</html>

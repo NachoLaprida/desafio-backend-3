@@ -11,26 +11,68 @@
     <title>Desafio con Ejs</title>
 </head>
     <body>
-        <section class="container">
-            <h1>Registrate</h1>
-            <div class="login container" >
-                <form action="" method="POST">
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input  type="email" class="form-control col-6" id="email" name="email"
-                            placeholder="Ingresa tu usuario" />
+        <header>
+            <nav class="navbar navbar-expand-lg navbar-light">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="">
+                        <img class="logo" src="../../public/images/t-shirt.jpg" alt="">
+                    </a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav">
+                            <li class="nav-item m-3">
+                                <a class="nav-link text-center" aria-current="page" href="login">Iniciar Sesión</a>
+                            </li>
+                        </ul>
                     </div>
-                    <div class="form-group">
-                        <label for="password">Contraseña</label>
-                        <input  type="password" class="form-control col-6" id="password" name="password"
-                            placeholder="Ingresa tu contraseña" />
-                    </div>
-                    <br>
-                    <input class="btn btn-primary" type="submit" value="Registrar" id="submit-registro">
-                </form>
-                <a href="http://localhost:8080/api/usuarios/login">Login</a>
-            </div>
-        </section>
+                </div>
+            </nav>
+        </header>
+        <main>
+            <section class="container">
+                <h1>Registrate</h1>
+                <div class="login container" >
+                    <form action="" method="POST">
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input  type="email" class="form-control col-6" id="email" name="email"
+                                placeholder="Ingresa tu usuario" />
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Contraseña</label>
+                            <input  type="password" class="form-control col-6" id="password" name="password"
+                                placeholder="Ingresa tu contraseña" />
+                        </div>
+                        <div class="form-group">
+                            <label for="name">Nombre</label>
+                            <input  type="text" class="form-control col-6" id="name" name="name"
+                                placeholder="Ingresa tu nombre" />
+                        </div>
+                        <div class="form-group">
+                            <label for="age">Edad</label>
+                            <input  type="number" class="form-control col-6" id="age" name="age"
+                                placeholder="Ingresa tu edad" />
+                        </div>
+                        <div class="form-group">
+                            <label for="address">Direccion</label>
+                            <input  type="text" class="form-control col-6" id="address" name="address"
+                                placeholder="Ingresa tu dirección" />
+                        </div>
+                        <div class="form-group">
+                            <label for="avatar">Avatar</label>
+                            <input  type="text" class="form-control col-6" id="avatar" name="avatar"
+                                placeholder="Ingresa tu avatar" />
+                        </div>
+                        <br>
+                        <input class="btn btn-primary" type="submit" value="Registrar" id="submit-registro" name="myFile">
+                    </form>
+                </div>
+            </section>
+        </main>
+        
         <footer>
             <%- include('../partials/footer.ejs', {mensajeFooter: 'Proyecto CoderHouse curso backend || Ignacio Laprida'})%>
         </footer>

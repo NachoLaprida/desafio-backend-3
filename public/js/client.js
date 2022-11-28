@@ -1,4 +1,6 @@
-const socket = io.connect()
+const socket = io && io.connect()
+
+
 
 
 //////////// chat //////////////////
@@ -88,6 +90,7 @@ const renderProduct = (prod) => {
                     <h5 class="card-title"> ${prod.name}</h5>
                     <h5 class="card-title">$${ prod.price }</h5>
                 </div>
+                <button class="btn btn-primary" type="button">Button</button>
             </div>
     `
     mensaje.innerHTML += html
@@ -113,7 +116,7 @@ socket.on('connect', () => {
 const btnLogin = document.querySelector('#submit-login')
 btnLogin && btnLogin.addEventListener('click', e => {
     e.preventDefault()
-    const url = "http://localhost:8080/api/usuarios/login"
+    const url = `${window.location.origin}/api/usuarios/login`
     let email = document.querySelector("#email").value
     let password = document.querySelector("#password").value
     return fetch(url, {
@@ -123,42 +126,79 @@ btnLogin && btnLogin.addEventListener('click', e => {
     })
     .then(res => {
         if (res.status !== 200) {
-            window.location.href = "http://localhost:8080/api/usuarios/login/error"
+            window.location.href = `${window.location.origin}/api/usuarios/login/error`
             return
         }
-        window.location.href = "http://localhost:8080/api/productos";
+        window.location.href = `${window.location.origin}/api/productos`
     })
     .catch(err => {
-        window.location.href = "http://localhost:8080/api/usuarios/login/error"
+        window.location.href = `${window.location.origin}/api/usuarios/login/error`
     })
 })
 
 const btnRegistro = document.querySelector('#submit-registro')
 btnRegistro && btnRegistro.addEventListener('click', e => {
     e.preventDefault()
-    const url = "http://localhost:8080/api/usuarios/registro"
+    const url = "/api/usuarios/registro"
     let email = document.querySelector("#email").value
     let password = document.querySelector("#password").value
+    let name = document.querySelector("#name").value
+    let age = document.querySelector("#age").value
+    let avatar = document.querySelector("#avatar").value
+    let address = document.querySelector("#address").value
     return fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ email, password, name, age, avatar, address })
     })
     .then(res => {
         if (res.status !== 200) {
-            window.location.href = "http://localhost:8080/api/usuarios/registro/error"
+            window.location.href = `${window.location.origin}/api/usuarios/registro/error`
             return
         }
-        window.location.href = "http://localhost:8080/api/usuarios/login"
+        window.location.href = `${window.location.origin}/api/productos`
     })
     .catch(err => {
-        window.location.href = "http://localhost:8080/api/usuarios/registro/error"
+        window.location.href = `${window.location.origin}/api/usuarios/registro/error`
     })
 })
 
+const goToLogin = () => {
+    window.location.href = `${window.location.origin}/api/usuarios/login`
+}
 
+const goToRegister = () => {
+    window.location.href = `${window.location.origin}/api/usuarios/registro`
+}
 
+const goToLogOut = () => {
+    window.location.href = `${window.location.origin}/api/usuarios/logout`
+}
 
+const goToProfile = () => {
+    window.location.href = `${window.location.origin}/api/productos/profile`
+}
 
+const goToHome = () => {
+    window.location.href = `${window.location.origin}/api/productos`
+}
 
+const goToCart = () => {
+    window.location.href = `${window.location.origin}/api/carrito`
+}
+/////////////////// CARRITO /////////////////
 
+const addToCart = (productId) => {
+    let url = 'carrito'
+    return fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({productId})
+    })
+    .then(res => {
+        console.log(`se agrego un producto al carrito`)
+    })
+    .catch(err => {
+        console.log(err)
+    })
+}

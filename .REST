@@ -22,11 +22,13 @@
 //{"name": "Camiseta Noruega", "price": 200, "thumbnail": "http://cdn.shopify.com/s/files/1/0567/6639/8509/products/fwrwg_1200x1200.jpg?v=1658523444"}
 
 
-//POST http://localhost:8080/api/carrito HTTP/1.1
-//content-type : application/json 
+POST http://localhost:8080/api/carrito HTTP/1.1
+content-type : application/json 
+
+{"productId": "6373fe768cca0e06f474c4e2"}
 
 
-//GET http://localhost:8080/api/productos HTTP/1.1
+//GET http://localhost:8080/api/productos/6374206b8cb8e8ff7c5c766a HTTP/1.1
 //content-type : application/json
 
 //GET http://localhost:8080/api/productos/B9Rv4loOCcR9xi2VbMdP HTTP/1.1
@@ -48,5 +50,3 @@
 
 GET http://localhost:8081/info HTTP/1.1
 content-type : application/json 
-
-

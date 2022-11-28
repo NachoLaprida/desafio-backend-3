@@ -9,3 +9,18 @@ body{
 .texto{
     color: green;
 }
+
+/* register */
+
+.navbar{
+    background-color: green;
+}
+
+.logo{
+    height: 60px;
+    width: 60px;
+}
+
+.nav-item{
+    font-weight: bold;
+}

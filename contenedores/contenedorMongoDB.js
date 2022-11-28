@@ -51,6 +51,15 @@ class ContenedorMongoDB {
 			console.log(`error al actualizar: ${error}`)
 		}
 	}
+	async getById(user) {
+		try {
+			let datos = await this.modelo.findOne({ user: user })
+			let newDatos = { ...datos._doc, id: datos._id.toString() }
+			return newDatos
+		} catch (error) {
+			return `No se pudo traer producto ${id}. ${error}`
+		}
+	}
 }
 
 module.exports.ContenedorMongoDB = ContenedorMongoDB

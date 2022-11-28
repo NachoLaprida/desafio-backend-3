@@ -8,16 +8,12 @@ const { connectMongoDB } = require("../../config/mongoDB.js")
 const cartsCollection = "carts"
 
 const cartsSchema = new mongoose.Schema({
-	name: { 
+	userEmail: { 
         type: String,
         require: true 
     },
-	thumbnail: { 
-        type: String, 
-        require: true 
-    },
-	price: { 
-        type: Number, 
+	products: { 
+        type: Array, 
         require: true 
     }
 })
@@ -27,6 +23,14 @@ const carts = mongoose.model(cartsCollection, cartsSchema)
 class CarritoDaoMongoDB extends ContenedorMongoDB {
 	constructor() {
 		super(connectMongoDB, carts)
+	}
+    async getByEmail(email) {
+		try {
+			let datos = await this.modelo.findOne({ userEmail: email })
+			return datos
+		} catch (error) {
+			return `No se pudo traer el carrito del usuario ${email}. ${error}`
+		}
 	}
 }
 
