@@ -1,4 +1,4 @@
-const mongoose = require("mongoose")
+/* const mongoose = require("mongoose") */
 
 class ContenedorMongoDB {
 	constructor(connexion, modelo) {
@@ -14,8 +14,10 @@ class ContenedorMongoDB {
 		}
 	}
 	async getById(id) {
+		console.log(id)
 		try {
 			let datos = await this.modelo.findOne({ _id: id })
+			
 			let newDatos = { ...datos._doc, id: datos._id.toString() }
 			return newDatos
 		} catch (error) {
@@ -49,15 +51,6 @@ class ContenedorMongoDB {
 			return obj.id
 		} catch (error) {
 			console.log(`error al actualizar: ${error}`)
-		}
-	}
-	async getById(user) {
-		try {
-			let datos = await this.modelo.findOne({ user: user })
-			let newDatos = { ...datos._doc, id: datos._id.toString() }
-			return newDatos
-		} catch (error) {
-			return `No se pudo traer producto ${id}. ${error}`
 		}
 	}
 }

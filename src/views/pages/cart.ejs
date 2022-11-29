@@ -24,10 +24,10 @@
                     <div class="collapse navbar-collapse" id="navbarNav">
                         <ul class="navbar-nav">
                             <li class="nav-item m-3">
-                                <a class="nav-link text-center" aria-current="page" href="carrito">Carrito</a>
+                                <a class="nav-link text-center" aria-current="page" href="#" onclick="goToHome()">Home</a>
                             </li>
                             <li class="nav-item m-3">
-                                <a class="nav-link text-center" aria-current="page" href="perfil">Perfil</a>
+                                <a class="nav-link text-center" aria-current="page" href="#" onclick="goToProfile()">Perfil</a>
                             </li>
                             <li class="nav-item m-3">
                                 <a class="nav-link text-center" aria-current="page" href="#" onclick="goToLogOut()">Cerrar Sesión</a>
@@ -37,44 +37,31 @@
                 </div>
             </nav>
         </header>
-        <section class="container">
-            <% if(email) { %>
-                <h1>Bienvenido <%= email %></h1>
-            <% }else{ %>
-                <h1>No te logueaste</h1>
-            <% } %>
-        </section>
-        
-        <h1 class="text-center">Camisetas del Mundial 2022</h1>
-        <div class="container d-flex flex-row flex-wrap" id="nacho">
-            <% if(listaProductos.length > 0) {%>
-                    <% listaProductos.forEach( prod => { %>
-                        <div class="card tarjeta m-3" style="width: 18rem;">
-                            <img src=<%= prod.thumbnail %> class="card-img-top" alt="...">
-                            <div class="card-body">
-                                <h5 class="card-title"><%= prod.name %></h5>
-                                <h5 class="card-title">$<%= prod.price %></h5>
+        <section>
+            <div class="container d-flex flex-row flex-wrap" id="nacho">
+                <% if(Products.length > 0) {%>
+                        <% Products.forEach( prod => { %>
+                            <div class="card tarjeta m-3" style="width: 18rem;" id=<%= prod.id %>>
+                                <img src=<%= prod.thumbnail %> class="card-img-top" alt="...">
+                                <div class="card-body">
+                                    <h5 class="card-title"><%= prod.name %></h5>
+                                    <h5 class="card-title">$<%= prod.price %></h5>
+                                </div>
                             </div>
-                        </div>
-                    <% }) %>
-            <% }else{ %>
-                <h2>No hay productos</h2>
-            <% } %>
+                        <% }) %>
+                <% }else{ %>
+                    <h2>No hay productos en el carrito</h2>
+                <% } %>
+            </div>
+        </section>
         </div>
-        <div class="container justify-content-center m-3">
-            <%- include('../partials/form.ejs')  %>
-        </div>
-    
-        <div id="catalogo" class="container d-flex flex-row flex-wrap">
-            
-
-        </div>
+        
 
 
         <footer>
             <%- include('../partials/footer.ejs', {mensajeFooter: 'Proyecto CoderHouse curso backend || Ignacio Laprida'})%>
         </footer>
         
-        <script src="/js/client.js"></script>
+        <script src="../../../js/client.js"></script>
     </body>
 </html>

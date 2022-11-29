@@ -1,5 +1,5 @@
 
-const {ContenedorMongoDB} = require("../../contenedores/contenedorMongoDB.js")
+const {ContenedorMongoDB} = require("../../contenedores/contenedorMongoDB")
 const mongoose = require("mongoose")
 const { connectMongoDB } = require("../../config/mongoDB.js")
 
